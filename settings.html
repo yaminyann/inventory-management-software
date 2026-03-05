@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Store Settings</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Manage store, users, roles, branches and loyalty config</p>
+            </div>
+        </div>
+
+        <!-- Settings Tabs -->
+        <div
+            class="flex gap-1 mb-6 overflow-x-auto bg-white p-1 rounded-xl border border-slate-200 custom-shadow w-fit max-w-full">
+            <button onclick="showTab('general')" id="stab-general"
+                class="stab px-4 py-2 text-sm font-bold rounded-lg bg-primary-600 text-white whitespace-nowrap">General</button>
+            <button onclick="showTab('users')" id="stab-users"
+                class="stab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-100 whitespace-nowrap">Users
+                & Roles</button>
+            <button onclick="showTab('branch')" id="stab-branch"
+                class="stab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-100 whitespace-nowrap">Branches</button>
+            <button onclick="showTab('loyalty')" id="stab-loyalty"
+                class="stab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-100 whitespace-nowrap">Loyalty
+                Points</button>
+            <button onclick="showTab('api')" id="stab-api"
+                class="stab px-4 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:bg-slate-100 whitespace-nowrap">API
+                Keys</button>
+        </div>
+
+        <!-- GENERAL TAB -->
+        <div id="tab-general">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="col-span-1 lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-6">
+                        <h3 class="text-base font-bold text-slate-800 mb-5 border-b pb-3 border-slate-100">General
+                            Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div><label for="s-shopName" class="block text-sm font-medium text-slate-700 mb-1">Store
+                                    Name</label>
+                                <input type="text" id="s-shopName"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm"
+                                    placeholder="NextWeb Shop">
+                            </div>
+                            <div><label for="s-phone" class="block text-sm font-medium text-slate-700 mb-1">Owner
+                                    Contact</label>
+                                <input type="text" id="s-phone"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm"
+                                    placeholder="017XXXXXXXX">
+                            </div>
+                            <div><label for="s-address" class="block text-sm font-medium text-slate-700 mb-1">Store
+                                    Address</label>
+                                <input type="text" id="s-address"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm"
+                                    placeholder="Dhaka, Bangladesh">
+                            </div>
+                            <div><label for="s-tax" class="block text-sm font-medium text-slate-700 mb-1">Default Tax
+                                    %</label>
+                                <input type="number" id="s-tax"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm"
+                                    placeholder="0">
+                            </div>
+                        </div>
+                        <div class="mt-5 flex justify-end">
+                            <button onclick="UI.showToast('General settings saved!','success')"
+                                class="px-6 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Save
+                                Changes</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-primary-50 border border-primary-100 rounded-2xl p-5 h-fit">
+                    <h4 class="text-sm font-bold text-primary-800 mb-1" id="ctx-category">Loading...</h4>
+                    <p class="text-xs text-primary-600 leading-relaxed">Store logic is dynamically configured based on
+                        your category. Fields in products & POS respect this setup.</p>
+                    <ul class="mt-3 text-xs text-primary-700 space-y-1.5" id="logic-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- USERS & ROLES TAB -->
+        <div id="tab-users" class="hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Users & Access Roles</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Create accounts and assign role-based access permissions
+                    </p>
+                </div>
+                <button onclick="openUserModal()"
+                    class="px-5 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add User
+                </button>
+            </div>
+
+            <!-- Role Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white border-2 border-primary-100 rounded-2xl p-4 custom-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-sm">
+                            A</div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Admin</p>
+                            <p class="text-xs text-slate-400">Full Access</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs text-slate-600">
+                        <p>✅ POS & Sales</p>
+                        <p>✅ Reports & Analytics</p>
+                        <p>✅ User Management</p>
+                        <p>✅ Settings & Config</p>
+                        <p>✅ Purchases & Accounting</p>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-100 rounded-2xl p-4 custom-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-success-bg text-success flex items-center justify-center font-bold text-sm">
+                            S</div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Salesman</p>
+                            <p class="text-xs text-slate-400">Sales Only</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs text-slate-600">
+                        <p>✅ POS & Sales</p>
+                        <p>✅ Customer View</p>
+                        <p>✅ Invoice Print</p>
+                        <p>❌ Reports</p>
+                        <p>❌ Settings</p>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-100 rounded-2xl p-4 custom-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-sm">
+                            M</div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Manager</p>
+                            <p class="text-xs text-slate-400">Partial Access</p>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-xs text-slate-600">
+                        <p>✅ POS & Sales</p>
+                        <p>✅ Reports (View Only)</p>
+                        <p>✅ Stock Management</p>
+                        <p>❌ User Management</p>
+                        <p>❌ Accounting</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                    <h4 class="text-sm font-bold text-slate-800">All Users</h4>
+                    <span class="text-xs text-slate-400">3 active users</span>
+                </div>
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-[10px] text-slate-500 uppercase tracking-widest bg-slate-50 font-bold">
+                            <th class="py-3 px-6">User</th>
+                            <th class="py-3 px-6">Role</th>
+                            <th class="py-3 px-6">Branch</th>
+                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50" id="users-table-body">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-sm">
+                                        K</div>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Kamal Hossain</p>
+                                        <p class="text-xs text-slate-400">admin@nextwebshop.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-primary-50 text-primary-600 px-2.5 py-1 rounded-lg text-xs font-bold">Admin</span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-500 text-sm">Main Branch</td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-success-bg text-success px-2.5 py-1 rounded-lg text-xs font-bold">Active</span>
+                            </td>
+                            <td class="py-4 px-6 text-right"><button
+                                    class="text-xs text-primary-600 font-bold hover:underline mr-3">Edit</button><button
+                                    class="text-xs text-alert font-bold hover:underline">Deactivate</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-success-bg text-success flex items-center justify-center font-bold text-sm">
+                                        R</div>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Rahim Miah</p>
+                                        <p class="text-xs text-slate-400">rahim@nextwebshop.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-bold">Salesman</span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-500 text-sm">Main Branch</td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-success-bg text-success px-2.5 py-1 rounded-lg text-xs font-bold">Active</span>
+                            </td>
+                            <td class="py-4 px-6 text-right"><button
+                                    class="text-xs text-primary-600 font-bold hover:underline mr-3">Edit</button><button
+                                    class="text-xs text-alert font-bold hover:underline">Deactivate</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-sm">
+                                        N</div>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Nasrin Akter</p>
+                                        <p class="text-xs text-slate-400">nasrin@nextwebshop.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-lg text-xs font-bold">Manager</span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-500 text-sm">Gulshan Branch</td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-success-bg text-success px-2.5 py-1 rounded-lg text-xs font-bold">Active</span>
+                            </td>
+                            <td class="py-4 px-6 text-right"><button
+                                    class="text-xs text-primary-600 font-bold hover:underline mr-3">Edit</button><button
+                                    class="text-xs text-alert font-bold hover:underline">Deactivate</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- BRANCH TAB -->
+        <div id="tab-branch" class="hidden space-y-5">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Branch Management</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Create and manage store branches with their own users</p>
+                </div>
+                <button onclick="openBranchModal()"
+                    class="px-5 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    New Branch
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="branches-grid">
+                <div class="bg-white border-2 border-primary-100 rounded-2xl p-5 custom-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
+                                M</div>
+                            <div>
+                                <p class="font-bold text-slate-800">Main Branch</p>
+                                <p class="text-xs text-slate-400">Headquarters</p>
+                            </div>
+                        </div>
+                        <span
+                            class="text-[10px] font-bold bg-success-bg text-success px-2 py-0.5 rounded-full uppercase">Active</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-600 mb-4">
+                        <p>📍 Mirpur, Dhaka</p>
+                        <p>📞 01811-000000</p>
+                        <p>👥 2 Staff</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="flex-1 py-2 text-xs font-bold border border-primary-200 text-primary-600 rounded-xl hover:bg-primary-50">Manage
+                            Users</button>
+                        <button
+                            class="flex-1 py-2 text-xs font-bold border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50">Edit</button>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-100 rounded-2xl p-5 custom-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                                G</div>
+                            <div>
+                                <p class="font-bold text-slate-800">Gulshan Branch</p>
+                                <p class="text-xs text-slate-400">Branch 2</p>
+                            </div>
+                        </div>
+                        <span
+                            class="text-[10px] font-bold bg-success-bg text-success px-2 py-0.5 rounded-full uppercase">Active</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-600 mb-4">
+                        <p>📍 Gulshan-1, Dhaka</p>
+                        <p>📞 01811-111111</p>
+                        <p>👥 1 Staff</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="flex-1 py-2 text-xs font-bold border border-primary-200 text-primary-600 rounded-xl hover:bg-primary-50">Manage
+                            Users</button>
+                        <button
+                            class="flex-1 py-2 text-xs font-bold border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50">Edit</button>
+                    </div>
+                </div>
+                <button onclick="openBranchModal()"
+                    class="border-2 border-dashed border-slate-200 rounded-2xl p-5 flex flex-col items-center justify-center gap-2 hover:border-primary-400 hover:bg-primary-50 transition-all text-slate-400 hover:text-primary-600">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <p class="text-sm font-bold">Add New Branch</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- LOYALTY TAB -->
+        <div id="tab-loyalty" class="hidden">
+            <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-6 max-w-2xl">
+                <h3
+                    class="text-base font-bold text-slate-800 mb-5 border-b pb-3 border-slate-100 flex items-center gap-2">
+                    ⭐ Customer Loyalty Points Configuration
+                </h3>
+                <div class="flex items-center gap-3 mb-6">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="points-enabled" class="sr-only peer" checked>
+                        <div
+                            class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600">
+                        </div>
+                    </label>
+                    <span class="font-semibold text-slate-700 text-sm">Enable Loyalty Points System</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Earning Rate</label>
+                        <div class="bg-slate-50 rounded-xl p-4 space-y-3">
+                            <p class="text-xs text-slate-500">Every _____ spent earns _____ point(s)</p>
+                            <div class="flex items-center gap-3">
+                                <div><label for="points-per-spend" class="sr-only">Spend amount</label><input
+                                        type="number" id="points-per-spend" value="100"
+                                        class="w-20 px-3 py-2 border border-slate-200 rounded-xl text-sm font-bn text-center"><span
+                                        class="text-xs text-slate-500 ml-1">৳ = </span></div>
+                                <div><label for="pts-earn" class="sr-only">Points earned</label><input type="number"
+                                        id="pts-earn" value="1"
+                                        class="w-16 px-3 py-2 border border-slate-200 rounded-xl text-sm font-bn text-center"><span
+                                        class="text-xs text-slate-500 ml-1">pt</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Redemption Rate</label>
+                        <div class="bg-slate-50 rounded-xl p-4 space-y-3">
+                            <p class="text-xs text-slate-500">_____ points = ৳ _____ discount</p>
+                            <div class="flex items-center gap-3">
+                                <div><label for="pts-redeem-count" class="sr-only">Points to redeem</label><input
+                                        type="number" id="pts-redeem-count" value="100"
+                                        class="w-20 px-3 py-2 border border-slate-200 rounded-xl text-sm font-bn text-center"><span
+                                        class="text-xs text-slate-500 ml-1">pts = ৳</span></div>
+                                <div><label for="pts-redeem-val" class="sr-only">Discount value</label><input
+                                        type="number" id="pts-redeem-val" value="10"
+                                        class="w-16 px-3 py-2 border border-slate-200 rounded-xl text-sm font-bn text-center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="savePointsSettings()"
+                        class="px-6 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Save
+                        Points Config</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API TAB -->
+        <div id="tab-api" class="hidden">
+            <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-6 max-w-2xl space-y-5">
+                <h3 class="text-base font-bold text-slate-800 border-b pb-3 border-slate-100">API & Integrations</h3>
+                <div><label for="sms-key" class="block text-sm font-medium text-slate-700 mb-1">SMS Gateway API
+                        Key</label>
+                    <input type="password" id="sms-key" placeholder="•••••••••••••••"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                </div>
+                <div><label for="sms-sender" class="block text-sm font-medium text-slate-700 mb-1">SMS Sender ID</label>
+                    <input type="text" id="sms-sender" placeholder="MYSHOP"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                </div>
+                <div><label for="api-key-bkash" class="block text-sm font-medium text-slate-700 mb-1">bKash Merchant API
+                        Key</label>
+                    <input type="password" id="api-key-bkash" placeholder="•••••••••••••••"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                </div>
+                <button onclick="UI.showToast('API keys saved securely!','success')"
+                    class="px-6 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Save
+                    API Keys</button>
+            </div>
+        </div>
+
+        <!-- Add User Modal -->
+        <div id="user-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative z-10 flex flex-col max-h-[90vh]">
+                <div
+                    class="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10 rounded-t-2xl">
+                    <h3 class="text-lg font-bold text-slate-800">Create New User</h3>
+                    <button onclick="document.getElementById('user-modal').classList.add('hidden')" title="Close"
+                        class="text-slate-400 hover:text-slate-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-grow">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label for="u-name" class="block text-sm font-medium text-slate-700 mb-1">Full Name
+                                *</label>
+                            <input type="text" id="u-name" placeholder="Rahim Miah"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                        </div>
+                        <div><label for="u-phone" class="block text-sm font-medium text-slate-700 mb-1">Phone *</label>
+                            <input type="text" id="u-phone" placeholder="017XXXXXXXX"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                        </div>
+                    </div>
+                    <div><label for="u-email" class="block text-sm font-medium text-slate-700 mb-1">Email
+                            (Login)</label>
+                        <input type="email" id="u-email" placeholder="user@store.com"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div><label for="u-pass" class="block text-sm font-medium text-slate-700 mb-1">Password *</label>
+                        <input type="password" id="u-pass" placeholder="Minimum 6 characters"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label for="u-role" class="block text-sm font-medium text-slate-700 mb-1">Role *</label>
+                            <select id="u-role" title="Select role"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                                <option value="admin">Admin (Full)</option>
+                                <option value="manager">Manager (Partial)</option>
+                                <option value="salesman" selected>Salesman (Sales Only)</option>
+                            </select>
+                        </div>
+                        <div><label for="u-branch" class="block text-sm font-medium text-slate-700 mb-1">Branch</label>
+                            <select id="u-branch" title="Select branch"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                                <option>Main Branch</option>
+                                <option>Gulshan Branch</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Dynamic Permissions -->
+                    <div id="role-permissions" class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Manual Permissions
+                                Control</p>
+                            <label class="flex items-center gap-1 cursor-pointer select-none">
+                                <input type="checkbox" onchange="toggleAllPerms(this.checked)"
+                                    class="w-3 h-3 rounded border-slate-300">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase">Select All</span>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-2" id="manual-perm-list">
+                            <!-- Checkboxes added by JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-slate-100 flex gap-3 sticky bottom-0 bg-white z-10 rounded-b-2xl">
+                    <button onclick="document.getElementById('user-modal').classList.add('hidden')"
+                        class="flex-1 py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl text-sm font-bn">বাতিল</button>
+                    <button onclick="createUser()"
+                        class="flex-1 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Create
+                        User</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Branch Modal -->
+        <div id="branch-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative z-10">
+                <h3 class="text-lg font-bold text-slate-800 mb-6">New Branch</h3>
+                <div class="space-y-4">
+                    <div><label for="b-name" class="block text-sm font-medium text-slate-700 mb-1">Branch Name *</label>
+                        <input type="text" id="b-name" placeholder="e.g. Dhanmondi Branch"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div><label for="b-address" class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+                        <input type="text" id="b-address" placeholder="Full address"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div><label for="b-phone" class="block text-sm font-medium text-slate-700 mb-1">Contact
+                            Phone</label>
+                        <input type="text" id="b-phone" placeholder="017XXXXXXXX"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div><label for="b-manager" class="block text-sm font-medium text-slate-700 mb-1">Branch
+                            Manager</label>
+                        <select id="b-manager" title="Select manager"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                            <option>Nasrin Akter (Manager)</option>
+                            <option>Kamal Hossain (Admin)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="document.getElementById('branch-modal').classList.add('hidden')"
+                        class="flex-1 py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl text-sm font-bn">বাতিল</button>
+                    <button onclick="createBranch()"
+                        class="flex-1 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Create
+                        Branch</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        const ALL_AVAILABLE_PERMS = [
+            'POS & Sales', 'Discount Control', 'Return/Refund', 'Reports View', 'Reports Manage',
+            'Products Manage', 'Inventory & Stock', 'Purchases', 'Suppliers', 'Customers',
+            'Accounting', 'Expenses', 'Staff Management', 'Settings', 'API & Keys', 'Marketing'
+        ];
+
+        const ROLE_DEFAULTS = {
+            admin: ['POS & Sales', 'Discount Control', 'Return/Refund', 'Reports View', 'Reports Manage', 'Products Manage', 'Inventory & Stock', 'Purchases', 'Suppliers', 'Customers', 'Accounting', 'Expenses', 'Staff Management', 'Settings', 'API & Keys', 'Marketing'],
+            manager: ['POS & Sales', 'Discount Control', 'Reports View', 'Products Manage', 'Inventory & Stock', 'Customers', 'Expenses'],
+            salesman: ['POS & Sales', 'Customers'],
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            const state = window.appState.get();
+            const logic = window.CATEGORY_LOGIC[state.category] || {};
+            document.getElementById('ctx-category').textContent = `Operating in ${state.category} Mode`;
+            document.getElementById('s-shopName').value = state.shopName || '';
+            document.getElementById('s-phone').value = state.phone || '';
+            const list = document.getElementById('logic-list');
+            [logic.enableIMEI && '✓ IMEI/Serial', logic.enableExpiry && '✓ Expiry Dates', logic.enableSizeColor && '✓ Size/Color Variants', logic.enableWarranty && '✓ Warranty Tracking', logic.enableWeightUnit && '✓ Multi-Units'].filter(Boolean).forEach(t => { const li = document.createElement('li'); li.className = 'text-xs text-primary-700'; li.textContent = t; list.appendChild(li); });
+
+            document.getElementById('u-role').addEventListener('change', (e) => loadRoleDefaults(e.target.value));
+            renderManualPermissionsTable();
+        });
+
+        function renderManualPermissionsTable() {
+            const list = document.getElementById('manual-perm-list');
+            list.innerHTML = ALL_AVAILABLE_PERMS.map(p => `
+                <label class="flex items-center gap-2 cursor-pointer p-1.5 hover:bg-slate-100 rounded transition-colors group">
+                    <input type="checkbox" name="perm" value="${p}" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500/20 perm-check">
+                    <span class="text-xs text-slate-600 font-medium group-hover:text-slate-900">${p}</span>
+                </label>
+            `).join('');
+        }
+
+        function loadRoleDefaults(role) {
+            const defaults = ROLE_DEFAULTS[role] || [];
+            const checks = document.querySelectorAll('.perm-check');
+            checks.forEach(c => {
+                c.checked = defaults.includes(c.value);
+            });
+        }
+
+        function toggleAllPerms(checked) {
+            document.querySelectorAll('.perm-check').forEach(c => c.checked = checked);
+        }
+
+        function showTab(tab) {
+            ['general', 'users', 'branch', 'loyalty', 'api'].forEach(t => {
+                document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById('stab-' + t);
+                btn.classList.toggle('bg-primary-600', t === tab);
+                btn.classList.toggle('text-white', t === tab);
+                btn.classList.toggle('text-slate-600', t !== tab);
+            });
+        }
+
+        function openUserModal() {
+            document.getElementById('user-modal').classList.remove('hidden');
+            loadRoleDefaults('salesman'); // default starting point
+        }
+
+        function openBranchModal() {
+            document.getElementById('branch-modal').classList.remove('hidden');
+        }
+
+        function createUser() {
+            const name = document.getElementById('u-name').value;
+            if (!name) { UI.showToast('Please fill in the name', 'error'); return; }
+            UI.showToast(`User "${name}" created successfully!`, 'success');
+            document.getElementById('user-modal').classList.add('hidden');
+        }
+
+        function createBranch() {
+            const name = document.getElementById('b-name').value;
+            if (!name) { UI.showToast('Branch name is required', 'error'); return; }
+            UI.showToast(`Branch "${name}" created!`, 'success');
+            document.getElementById('branch-modal').classList.add('hidden');
+        }
+
+        function savePointsSettings() {
+            const settings = {
+                enabled: document.getElementById('points-enabled').checked,
+                spendPerPoint: parseInt(document.getElementById('points-per-spend').value) || 100,
+                pointsEarned: parseInt(document.getElementById('pts-earn').value) || 1,
+                pointsPerTaka: parseInt(document.getElementById('pts-redeem-count').value) / parseInt(document.getElementById('pts-redeem-val').value || 10),
+            };
+            localStorage.setItem('nw_points_settings', JSON.stringify(settings));
+            UI.showToast('Loyalty points config saved!', 'success');
+        }
+    </script>
+</body>
+
+</html>

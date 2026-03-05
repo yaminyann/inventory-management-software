@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .period-btn.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+        <div class="space-y-6 max-w-7xl mx-auto">
+
+            <!-- Header -->
+            <div
+                class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 tracking-tight" id="welcome-message">Welcome back!</h2>
+                    <p class="text-sm text-slate-500 mt-0.5" id="dash-date-label">Loading...</p>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <!-- Period Selector -->
+                    <div class="flex bg-slate-100 rounded-xl p-1 gap-1 flex-wrap" id="period-selector">
+                        <button onclick="setPeriod('today')"
+                            class="period-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:bg-white transition-all active"
+                            data-period="today">Today</button>
+                        <button onclick="setPeriod('yesterday')"
+                            class="period-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:bg-white transition-all"
+                            data-period="yesterday">Yesterday</button>
+                        <button onclick="setPeriod('week')"
+                            class="period-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:bg-white transition-all"
+                            data-period="week">This Week</button>
+                        <button onclick="setPeriod('month')"
+                            class="period-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:bg-white transition-all"
+                            data-period="month">This Month</button>
+                        <button onclick="setPeriod('year')"
+                            class="period-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:bg-white transition-all"
+                            data-period="year">This Year</button>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="flex bg-slate-100 rounded-xl p-1 gap-1 flex-wrap">
+                        <select id="dash-category-filter" onchange="filterDashboardByCategory(this.value)"
+                            title="Filter Dashboard by Category"
+                            class="bg-transparent text-xs font-bold text-slate-600 border-none focus:ring-0 py-1.5 px-3 cursor-pointer">
+                            <option value="all">All Categories</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Cosmetics">Cosmetics</option>
+                        </select>
+                    </div>
+                    <a href="pos.html"
+                        class="px-4 py-2 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Open POS
+                    </a>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="kpi-cards"></div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Sales Chart -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">Sales Overview</h3>
+                            <p class="text-xs text-slate-400" id="chart-period-label">Today</p>
+                        </div>
+                        <div class="flex gap-3 text-xs font-semibold">
+                            <span class="flex items-center gap-1.5"><span
+                                    class="w-3 h-3 rounded-full bg-primary-500 inline-block"></span>Sales</span>
+                            <span class="flex items-center gap-1.5"><span
+                                    class="w-3 h-3 rounded-full bg-success inline-block"></span>Profit</span>
+                        </div>
+                    </div>
+                    <div class="relative h-52">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                <!-- Expense Breakdown Donut -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">Expense Breakdown</h3>
+                            <p class="text-xs text-slate-400">Current Period</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="relative h-48 w-48 flex-shrink-0">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                        <div id="expense-legend" class="space-y-2 text-xs"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts + Quick Stats -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Low Stock -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">⚠️ Low Stock Alerts</h3>
+                        <a href="stock.html" class="text-xs text-primary-600 font-bold hover:underline">View All</a>
+                    </div>
+                    <div class="space-y-2.5" id="low-stock-list"></div>
+                </div>
+
+                <!-- Expiring Soon -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">⏰ Expiring Soon</h3>
+                        <a href="stock.html" class="text-xs text-primary-600 font-bold hover:underline">View Stock</a>
+                    </div>
+                    <div class="space-y-2.5" id="expiring-soon-list">
+                        <!-- Example Alert -->
+                        <div
+                            class="flex items-center justify-between p-2 bg-alert-bg/10 rounded-xl border border-alert/20">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-800 line-clamp-1">Pran Mango Juice 1L</p>
+                                <p class="text-[9px] text-alert font-bold">Expires in 5 days</p>
+                            </div>
+                            <span
+                                class="text-[10px] bg-white px-2 py-0.5 rounded-lg font-bn text-slate-500 border border-slate-100 italic">25
+                                Mar</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 text-center py-2" id="no-expiry-msg" style="display:none;">
+                            No products expiring soon</p>
+                    </div>
+                </div>
+
+                <!-- Recent Sales -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">🧾 Recent Sales</h3>
+                        <a href="reports.html" class="text-xs text-primary-600 font-bold hover:underline">Reports</a>
+                    </div>
+                    <div class="space-y-2.5" id="recent-sales-list"></div>
+                </div>
+
+                <!-- Top Products / Performance -->
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">🔥 Top Products</h3>
+                        <a href="products.html" class="text-xs text-primary-600 font-bold hover:underline">Products</a>
+                    </div>
+                    <div class="space-y-2.5" id="top-products-list"></div>
+                </div>
+            </div>
+
+            <!-- Dues + Staff Due Widget -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">💰 Outstanding Dues</h3>
+                        <a href="dues.html" class="text-xs text-primary-600 font-bold hover:underline">Collect</a>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-red-50 rounded-xl">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Rakib Uddin</p>
+                                <p class="text-xs text-slate-500">Overdue 48 days</p>
+                            </div>
+                            <span class="font-bold text-alert font-bn">৳ 12,500</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-orange-50 rounded-xl">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Karim Ahmed</p>
+                                <p class="text-xs text-slate-500">Due in 7 days</p>
+                            </div>
+                            <span class="font-bold text-orange-600 font-bn">৳ 8,000</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                            <p class="text-xs text-slate-500">Total Outstanding</p>
+                            <p class="font-bold text-slate-800 font-bn">৳ 48,500</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl custom-shadow border border-slate-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">👥 Staff Payroll Status</h3>
+                        <a href="employees.html" class="text-xs text-primary-600 font-bold hover:underline">Manage</a>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm font-medium text-slate-700">Total Payroll (Mar)</p>
+                            <p class="font-bold text-slate-800 font-bn">৳ 85,000</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm font-medium text-slate-700">Paid</p>
+                            <p class="font-bold text-success font-bn">৳ 62,000</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm font-medium text-slate-700">Due</p>
+                            <p class="font-bold text-alert font-bn">৳ 23,000</p>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+                            <div class="bg-success h-2 rounded-full w-[73%]"></div>
+                        </div>
+                        <p class="text-xs text-slate-400">73% payroll completed</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        const PERIOD_DATA = {
+            today: {
+                label: 'Today, 05 Mar 2026',
+                chartLabel: 'Today (Hourly)',
+                sales: 45500, purchase: 28300, grossProfit: 17200, expenses: 2400, netProfit: 14800, cashInHand: 23500,
+                chartLabels: ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm'],
+                salesData: [3200, 5800, 7200, 4800, 6100, 5200, 4900, 5600, 2700],
+                profitData: [800, 1400, 1800, 1200, 1400, 1300, 1200, 1350, 750],
+            },
+            yesterday: {
+                label: 'Yesterday, 04 Mar 2026',
+                chartLabel: 'Yesterday (Hourly)',
+                sales: 38200, purchase: 22100, grossProfit: 16100, expenses: 1800, netProfit: 14300, cashInHand: 21000,
+                chartLabels: ['9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm'],
+                salesData: [2500, 4200, 6800, 5100, 4200, 4800, 3900, 4100, 2600],
+                profitData: [600, 1050, 1700, 1200, 1000, 1200, 900, 1000, 450],
+            },
+            week: {
+                label: 'This Week (01-05 Mar 2026)',
+                chartLabel: 'This Week',
+                sales: 215000, purchase: 128000, grossProfit: 87000, expenses: 15200, netProfit: 71800, cashInHand: 23500,
+                chartLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                salesData: [28000, 35000, 42000, 38000, 45500, 0, 0],
+                profitData: [9200, 12100, 14800, 13500, 14800, 0, 0],
+            },
+            month: {
+                label: 'March 2026',
+                chartLabel: 'March 2026 (Daily)',
+                sales: 980000, purchase: 580000, grossProfit: 400000, expenses: 68000, netProfit: 332000, cashInHand: 23500,
+                chartLabels: Array.from({ length: 15 }, (_, i) => `${i + 1} Mar`),
+                salesData: [28000, 35000, 42000, 38000, 45500, 52000, 31000, 28000, 33000, 40000, 38500, 44000, 41000, 36000, 45500],
+                profitData: [9400, 11200, 14800, 13100, 14800, 18200, 10200, 9200, 11000, 13500, 12500, 14800, 13800, 11800, 14800],
+            },
+            year: {
+                label: '2026 (Year to Date)',
+                chartLabel: '2026 (Monthly)',
+                sales: 3850000, purchase: 2280000, grossProfit: 1570000, expenses: 285000, netProfit: 1285000, cashInHand: 23500,
+                chartLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                salesData: [1200000, 980000, 1670000, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                profitData: [390000, 318000, 542000, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            }
+        };
+
+        let salesChart = null, expenseChart = null;
+        let currentPeriod = 'today';
+
+        function fmt(n) { return '৳ ' + n.toLocaleString('en-BD'); }
+
+        function setPeriod(period) {
+            currentPeriod = period;
+            document.querySelectorAll('.period-btn').forEach(b => {
+                b.classList.toggle('bg-primary-600', b.dataset.period === period);
+                b.classList.toggle('text-white', b.dataset.period === period);
+                b.classList.toggle('shadow-md', b.dataset.period === period);
+                b.classList.toggle('text-slate-600', b.dataset.period !== period);
+            });
+            renderDashboard(period);
+        }
+
+        function renderDashboard(period) {
+            const d = PERIOD_DATA[period];
+            document.getElementById('dash-date-label').textContent = d.label;
+            document.getElementById('chart-period-label').textContent = d.chartLabel;
+
+            // KPI Cards
+            const kpis = [
+                { label: 'Total Sales', value: fmt(d.sales), color: 'text-primary-600', bg: 'bg-primary-50', icon: '📈' },
+                { label: 'Purchase Cost', value: fmt(d.purchase), color: 'text-slate-700', bg: 'bg-slate-50', icon: '🛒' },
+                { label: 'Gross Profit', value: fmt(d.grossProfit), color: 'text-success', bg: 'bg-success-bg', icon: '💰' },
+                { label: 'Expenses', value: fmt(d.expenses), color: 'text-alert', bg: 'bg-alert-bg', icon: '📉' },
+                { label: 'Net Profit', value: fmt(d.netProfit), color: 'text-emerald-600', bg: 'bg-emerald-50', icon: '✅' },
+                { label: 'Cash in Hand', value: fmt(d.cashInHand), color: 'text-slate-800', bg: 'bg-slate-50', icon: '💵' },
+            ];
+            document.getElementById('kpi-cards').innerHTML = kpis.map(k => `
+        <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 col-span-1">
+            <div class="text-2xl mb-1">${k.icon}</div>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">${k.label}</p>
+            <p class="text-lg font-bold ${k.color} font-bn">${k.value}</p>
+        </div>`).join('');
+
+            // Sales Chart
+            if (salesChart) salesChart.destroy();
+            salesChart = new Chart(document.getElementById('salesChart'), {
+                type: 'line',
+                data: {
+                    labels: d.chartLabels,
+                    datasets: [
+                        { label: 'Sales', data: d.salesData, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.08)', fill: true, tension: 0.4, pointRadius: 4, borderWidth: 2 },
+                        { label: 'Profit', data: d.profitData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: true, tension: 0.4, pointRadius: 4, borderWidth: 2 },
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => '৳' + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v) } } } }
+            });
+
+            // Expense Chart
+            if (expenseChart) expenseChart.destroy();
+            const expLabels = ['Purchase', 'Salary', 'Rent', 'Marketing', 'Other'];
+            const expColors = ['#2563eb', '#f59e0b', '#ef4444', '#8b5cf6', '#94a3b8'];
+            const expValues = [d.purchase, Math.round(d.expenses * 0.4), Math.round(d.expenses * 0.3), Math.round(d.expenses * 0.15), Math.round(d.expenses * 0.15)];
+            expenseChart = new Chart(document.getElementById('expenseChart'), {
+                type: 'doughnut',
+                data: { labels: expLabels, datasets: [{ data: expValues, backgroundColor: expColors, borderWidth: 0, hoverOffset: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
+            });
+            document.getElementById('expense-legend').innerHTML = expLabels.map((l, i) => `
+        <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${expColors[i]}"></span>
+            <span class="text-slate-600">${l}</span>
+            <span class="font-bold text-slate-800 font-bn ml-auto">৳${expValues[i].toLocaleString()}</span>
+        </div>`).join('');
+        }
+
+        function renderStatic() {
+            // Low stock
+            const ls = [
+                { name: 'Miniket Rice', stock: 3, unit: 'Kg', tag: 'FAST ITEM' },
+                { name: 'Soyabean Oil', stock: 5, unit: 'Litre', tag: '' },
+                { name: 'Salt (ACI)', stock: 2, unit: 'Pack', tag: '' },
+            ];
+            document.getElementById('low-stock-list').innerHTML = ls.map(i => `
+        <div class="flex items-center justify-between text-sm">
+            <div>
+                <p class="font-semibold text-slate-800">${i.name}</p>
+                ${i.tag ? `<span class="text-[10px] font-bold text-orange-500">${i.tag}</span>` : ''}
+            </div>
+            <span class="text-xs font-bold text-alert bg-red-50 px-2 py-0.5 rounded-lg">${i.stock} ${i.unit} left</span>
+        </div>`).join('');
+
+            // Recent sales
+            const rs = [
+                { inv: '#INV-2026-042', customer: 'Abir Hasan', amount: 4500, time: '10:32 AM' },
+                { inv: '#INV-2026-041', customer: 'Walk-in', amount: 1200, time: '09:15 AM' },
+                { inv: '#INV-2026-040', customer: 'Sumaiya', amount: 8200, time: 'Yesterday' },
+            ];
+            document.getElementById('recent-sales-list').innerHTML = rs.map(r => `
+        <div class="flex items-center justify-between text-sm">
+            <div>
+                <p class="font-semibold text-slate-800">${r.inv}</p>
+                <p class="text-xs text-slate-400">${r.customer} • ${r.time}</p>
+            </div>
+            <span class="font-bold text-primary-600 font-bn">৳${r.amount.toLocaleString()}</span>
+        </div>`).join('');
+
+            // Top products
+            const tp = [
+                { name: 'Miniket Rice (Kg)', sales: 145, revenue: 10875 },
+                { name: 'Soyabean Oil (L)', sales: 92, revenue: 17020 },
+                { name: 'Radhuni Masala', sales: 73, revenue: 4015 },
+            ];
+            document.getElementById('top-products-list').innerHTML = tp.map((p, i) => `
+        <div class="flex items-center gap-3 text-sm">
+            <span class="w-6 h-6 rounded-full bg-primary-${i === 0 ? 600 : i === 1 ? 100 : 50} text-${i === 0 ? 'white' : 'primary-600'} flex items-center justify-center text-xs font-bold">${i + 1}</span>
+            <div class="flex-grow"><p class="font-semibold text-slate-800">${p.name}</p><p class="text-xs text-slate-400">${p.sales} sold</p></div>
+            <span class="font-bold font-bn text-slate-700">৳${p.revenue.toLocaleString()}</span>
+        </div>`).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            const state = window.appState.get();
+            document.getElementById('welcome-message').textContent = `Welcome back, ${state.ownerName || 'Admin'}! 👋`;
+            renderDashboard('today');
+            renderStatic();
+        });
+    </script>
+</body>
+
+</html>

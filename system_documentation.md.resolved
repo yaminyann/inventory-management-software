@@ -1,0 +1,91 @@
+# System Documentation: Multi-business SaaS Inventory Management System
+
+## 1. Executive Summary
+This project is a high-end, premium-designed Multi-business SaaS Inventory Management System tailored for the Bangladeshi retail market. It features a category-aware dynamic architecture that adapts to different business types (Fashion, Electronics, Grocery, etc.), multi-branch support, comprehensive accounting, and a multi-payment POS system.
+
+## 2. Global Architecture
+The system is built as a highly responsive single-page experience (SPA-like) using:
+- **Core**: Semantic HTML5, Vanilla JavaScript.
+- **Styling**: Tailwind CSS with a custom design system ([js/tailwind-config.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/tailwind-config.js) and [css/style.css](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/css/style.css)).
+- **State Management**: Localized state container ([js/state.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/state.js)) using `localStorage` for cross-page persistence.
+- **Layout**: Dynamic layout injector ([js/layout.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/layout.js)) that handles the global Sidebar, Navbar, and notifications.
+
+### Dynamic Category Logic
+The system uses a unique `CATEGORY_LOGIC` engine in [js/state.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/state.js) to toggle features globally:
+| Category | Expiry | Batch | Size/Color | IMEI/Serial | Warranty | Default Tax |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Grocery** | ✅ | ✅ | ❌ | ❌ | ❌ | 5% |
+| **Fashion** | ❌ | ❌ | ✅ | ❌ | ❌ | 15% |
+| **Electronics** | ❌ | ❌ | ❌ | ✅ | ✅ | 10% |
+| **Cosmetics** | ✅ | ✅ | ✅ | ❌ | ❌ | 8% |
+| **Hardware** | ❌ | ❌ | ❌ | ✅ | ✅ | 15% |
+
+---
+
+## 3. Module Breakdown
+
+### 🛒 Point of Sale (POS)
+- **File**: [js/pos.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/pos.js), [pos.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/pos.html)
+- **Features**: 
+    - Real-time cart management.
+    - Multi-payment support (Cash, Mobile, Card, EMI).
+    - Customer Loyalty points (Earn & Redeem).
+    - Category-aware item selection (IMEI for Electronics, Size/Color for Fashion).
+    - Hotkeys and barcode scanner support.
+
+### 📦 Inventory & Products
+- **Files**: [products.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/products.html), [categories.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/categories.html), [brands.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/brands.html), [stock.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/stock.html)
+- **Features**:
+    - SKU Generation and Barcode Printing.
+    - Advanced Product Modal with dynamic fields based on Category.
+    - Low-stock alerts and threshold management.
+    - Stock Transfer between branches.
+
+### 💰 Accounting & Finance
+- **Files**: [accounting.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/accounting.html), [dues.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/dues.html), [cashflow.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/cashflow.html), [purchase.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/purchase.html)
+- **Features**:
+    - Account Balances: Cash-in-hand, Bank, bKash, Nagad.
+    - Dues Tracking: Overdue alerts and partial collection.
+    - Cashflow: Tracking deposits, withdrawals, and ownership transfers.
+    - Expense management with breakdown analysis.
+
+### 📊 Reports & Analytics
+- **File**: [reports.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/reports.html), [dashboard.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/dashboard.html)
+- **Features**:
+    - Real-time P&L (Profit & Loss) Summary.
+    - Visual Analysis: Sales vs. Profit trends (Chart.js), Expense breakdown.
+    - Exporting: Excel and PDF stock/sales reports.
+
+### 👥 HR & People
+- **Files**: [employees.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/employees.html), [customers.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/customers.html), [suppliers.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/suppliers.html)
+- **Features**:
+    - Staff Payroll: Salary management, payment tracking, and dues.
+    - Advanced Supplier Profiles: Opening balance, ledger tracking, and liability management.
+
+---
+
+## 4. SaaS Readiness & Security
+
+### Multi-Tenancy (Simulated)
+- The system is designed for multi-tenant SaaS. Currently, tenancy is handled via `isLoggedIn` and `shopName` in [js/state.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/state.js).
+- **Branches**: Support for "Main Branch" and sub-branches with cross-branch stock transfers.
+
+### User Roles & Permissions
+Managed in [settings.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/settings.html) and [js/state.js](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/state.js):
+- **Admin**: Full system access.
+- **Manager**: Sales, Stock, and limited Reporting. No Accounting/Settings.
+- **Salesman**: POS, Invoices, and Customer viewing only.
+
+---
+
+## 5. Technical Insights & Logic
+- **Invoice Rendering**: [invoice.html](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/invoice.html) uses `sessionStorage` to pass data from POS to the print-ready invoice view.
+- **Responsive Layout**: Sidebar collapses on mobile with a backdrop overlay, controlled via [AppLayout](file:///d:/nextWEB%20-%20developers%20file/inventory%20management%20software/js/layout.js#6-272) class.
+- **Data Flow**: `UI.showToast` and `UI.confirm` provide consistent UX across the 16+ modules.
+
+---
+
+## 6. Identified Improvement Opportunities
+1. **Backend Integration**: Move from `localStorage` to a robust API (Express/Django) for true multi-user sync and data security.
+2. **Real-time Notifications**: Implement WebSockets for real-time stock alerts across branches.
+3. **PWA Support**: Add a Service Worker to allow POS usage in offline/low-connectivity environments common in many retail settings.

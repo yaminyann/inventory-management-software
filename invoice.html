@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @media print {
+            #no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
+            .print-card {
+                box-shadow: none !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+    <!-- ACTION BAR (no-print) -->
+    <div id="no-print"
+        class="bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-4">
+            <a href="pos.html"
+                class="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-primary-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                New Sale
+            </a>
+            <span class="text-slate-200">|</span>
+            <span class="font-bold text-slate-800 text-sm" id="inv-number-bar">Invoice #—</span>
+        </div>
+        <div class="flex gap-2">
+            <a href="sales-return.html"
+                class="px-4 py-2 border border-alert text-alert font-semibold rounded-xl text-sm hover:bg-alert-bg transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z">
+                    </path>
+                </svg>
+                Sales Return
+            </a>
+            <button onclick="window.print()"
+                class="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-50 transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                    </path>
+                </svg>
+                Print
+            </button>
+            <button onclick="downloadInvoice()"
+                class="px-4 py-2 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow transition-colors flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
+                Download PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- INVOICE CARD -->
+    <div class="max-w-3xl mx-auto my-8 px-4">
+        <div class="bg-white rounded-2xl shadow-lg print-card p-8" id="invoice-body">
+
+            <!-- Header -->
+            <div class="flex items-start justify-between border-b border-slate-100 pb-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg">
+                            N</div>
+                        <div>
+                            <h1 class="font-bold text-slate-800 text-xl" id="inv-shop-name">NextWeb Store</h1>
+                            <p class="text-xs text-slate-500" id="inv-shop-address">Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400" id="inv-shop-phone">Phone: 017XXXXXXXX</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-3xl font-black text-primary-600 tracking-tight">INVOICE</p>
+                    <p class="text-sm font-bold text-slate-700 mt-1" id="inv-number">#INV-2026-001</p>
+                    <p class="text-xs text-slate-500 mt-1" id="inv-date">Date: 04 Mar 2026</p>
+                    <span
+                        class="mt-2 inline-block bg-success-bg text-success text-[10px] font-bold uppercase px-2 py-0.5 rounded-lg tracking-wider">PAID</span>
+                </div>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Bill To</p>
+                    <p class="font-bold text-slate-800" id="inv-customer-name">Walk-in Customer</p>
+                    <p class="text-sm text-slate-500" id="inv-customer-phone"></p>
+                    <p class="text-xs text-primary-600 font-semibold mt-1" id="inv-points-earned"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Payment</p>
+                    <div id="inv-payment-methods" class="space-y-1 text-sm"></div>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <table class="w-full text-left mb-8">
+                <thead>
+                    <tr class="bg-slate-50 rounded-xl">
+                        <th
+                            class="py-3 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider rounded-l-xl">
+                            #</th>
+                        <th class="py-3 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Item</th>
+                        <th class="py-3 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">
+                            Qty</th>
+                        <th class="py-3 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">
+                            Unit Price</th>
+                        <th
+                            class="py-3 px-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right rounded-r-xl">
+                            Total</th>
+                    </tr>
+                </thead>
+                <tbody id="inv-items" class="text-sm divide-y divide-slate-50">
+                    <!-- filled by JS -->
+                </tbody>
+            </table>
+
+            <!-- Totals -->
+            <div class="flex justify-end mb-8">
+                <div class="w-72 space-y-2 text-sm" id="inv-totals"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="border-t border-slate-100 pt-6 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-400">Thank you for shopping with us!</p>
+                    <p class="text-xs text-slate-400">Exchange/return within 7 days with receipt.</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-bold text-primary-600">NextWeb Inventory</p>
+                    <p class="text-[10px] text-slate-400">Powered by NextWeb</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.appState) window.appState.requireAuth();
+
+            const invoice = JSON.parse(sessionStorage.getItem('lastInvoice') || '{}');
+            const state = window.appState ? window.appState.get() : {};
+
+            // Shop info
+            document.getElementById('inv-shop-name').textContent = state.shopName || 'NextWeb Store';
+            document.getElementById('inv-shop-address').textContent = state.shopAddress || 'Dhaka, Bangladesh';
+
+            // Invoice meta
+            const invNum = invoice.number || '#INV-2026-001';
+            document.getElementById('inv-number').textContent = invNum;
+            document.getElementById('inv-number-bar').textContent = 'Invoice ' + invNum;
+
+            const now = new Date(invoice.date || Date.now());
+            document.getElementById('inv-date').textContent = 'Date: ' + now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                + ' ' + now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+            // Customer
+            document.getElementById('inv-customer-name').textContent = invoice.customerName || 'Walk-in Customer';
+            if (invoice.customerPhone) document.getElementById('inv-customer-phone').textContent = invoice.customerPhone;
+            if (invoice.pointsEarned) document.getElementById('inv-points-earned').textContent = '+ ' + invoice.pointsEarned + ' Points Earned';
+
+            // Payment methods
+            const pmContainer = document.getElementById('inv-payment-methods');
+            if (invoice.payments && invoice.payments.length > 0) {
+                invoice.payments.forEach(p => {
+                    pmContainer.innerHTML += `<div class="flex justify-between gap-8"><span class="text-slate-500">${p.method}</span><span class="font-bold text-slate-800 font-bn">৳ ${parseFloat(p.amount).toFixed(2)}</span></div>`;
+                });
+            } else {
+                pmContainer.innerHTML = `<div class="text-slate-600 font-semibold">Cash</div>`;
+            }
+
+            // Items
+            const tbody = document.getElementById('inv-items');
+            const items = invoice.items || [{ name: 'Sample Item', qty: 1, price: 1000, unit: 'Pc' }];
+            items.forEach((item, i) => {
+                const total = item.price * item.qty;
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-3 px-4 text-slate-500">${i + 1}</td>
+                        <td class="py-3 px-4">
+                            <p class="font-semibold text-slate-800">${item.name}</p>
+                            ${item.variant ? `<p class="text-xs text-slate-400">Size: ${item.variant}</p>` : ''}
+                        </td>
+                        <td class="py-3 px-4 text-center font-bold font-bn">${item.qty} ${item.unit || ''}</td>
+                        <td class="py-3 px-4 text-right text-slate-600 font-bn">৳ ${item.price.toFixed(2)}</td>
+                        <td class="py-3 px-4 text-right font-bold text-slate-800 font-bn">৳ ${total.toFixed(2)}</td>
+                    </tr>`;
+            });
+
+            // Totals
+            const totals = document.getElementById('inv-totals');
+            const subtotal = invoice.subtotal || 1000;
+            const discount = invoice.discount || 0;
+            const pointsDiscount = invoice.pointsDiscount || 0;
+            const tax = invoice.tax || 0;
+            const total = invoice.total || 1000;
+
+            totals.innerHTML = `
+                <div class="flex justify-between text-slate-600"><span>Subtotal</span><span class="font-bn">৳ ${subtotal.toFixed(2)}</span></div>
+                ${discount > 0 ? `<div class="flex justify-between text-alert"><span>Discount</span><span class="font-bn">- ৳ ${discount.toFixed(2)}</span></div>` : ''}
+                ${pointsDiscount > 0 ? `<div class="flex justify-between text-primary-600"><span>Points Redeemed</span><span class="font-bn">- ৳ ${pointsDiscount.toFixed(2)}</span></div>` : ''}
+                ${tax > 0 ? `<div class="flex justify-between text-slate-600"><span>Tax</span><span class="font-bn">৳ ${tax.toFixed(2)}</span></div>` : ''}
+                <div class="flex justify-between font-bold text-lg text-slate-800 border-t border-slate-200 pt-2 mt-1">
+                    <span>Total</span><span class="text-primary-600 font-bn">৳ ${total.toFixed(2)}</span>
+                </div>`;
+        });
+
+        function downloadInvoice() {
+            UI.showToast('Preparing PDF download...', 'info');
+            setTimeout(() => window.print(), 300);
+        }
+    </script>
+</body>
+
+</html>

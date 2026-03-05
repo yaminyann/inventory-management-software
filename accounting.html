@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounting | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Accounting</h2>
+                <p class="text-sm text-slate-500 mt-0.5">All accounts, balances, and financial flow</p>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <a href="dues.html"
+                    class="px-4 py-2.5 border border-alert text-alert font-semibold rounded-xl text-sm hover:bg-alert-bg transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                    Dues
+                </a>
+                <a href="cashflow.html"
+                    class="px-4 py-2.5 border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-50 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                    </svg>
+                    Cashflow
+                </a>
+                <button onclick="document.getElementById('expense-modal').classList.remove('hidden')"
+                    class="px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    New Expense
+                </button>
+            </div>
+        </div>
+
+        <!-- Account Balance Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 col-span-2 md:col-span-1">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-lg">
+                        💵</div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cash</p>
+                </div>
+                <p class="text-xl font-bold text-slate-800 font-bn">৳ 23,500</p>
+                <p class="text-xs text-slate-400 mt-1">In hand</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-lg">🏦
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Bank</p>
+                </div>
+                <p class="text-xl font-bold text-slate-800 font-bn">৳ 1,85,000</p>
+                <p class="text-xs text-slate-400 mt-1">Dutch-Bangla</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center text-lg">📱
+                    </div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">bKash</p>
+                </div>
+                <p class="text-xl font-bold text-slate-800 font-bn">৳ 8,200</p>
+                <p class="text-xs text-slate-400 mt-1">Online wallet</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-lg">
+                        📲</div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Nagad</p>
+                </div>
+                <p class="text-xl font-bold text-slate-800 font-bn">৳ 4,100</p>
+                <p class="text-xs text-slate-400 mt-1">Online wallet</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-alert/20">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-alert-bg text-alert flex items-center justify-center text-lg">⚠️
+                    </div>
+                    <p class="text-xs font-bold text-alert uppercase tracking-wider">Dues</p>
+                </div>
+                <p class="text-xl font-bold text-alert font-bn">৳ 48,500</p>
+                <p class="text-xs text-slate-400 mt-1">12 customers</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                        📅</div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">EMI</p>
+                </div>
+                <p class="text-xl font-bold text-slate-800 font-bn">৳ 4,85,000</p>
+                <p class="text-xs text-slate-400 mt-1">Receivable</p>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex gap-2 mb-4 overflow-x-auto pb-1 custom-scrollbar">
+            <button onclick="filterAccount(this,'all')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-primary-600 text-white whitespace-nowrap">All
+                Accounts</button>
+            <button onclick="filterAccount(this,'cash')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">Cash</button>
+            <button onclick="filterAccount(this,'bank')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">Bank</button>
+            <button onclick="filterAccount(this,'bkash')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">bKash</button>
+            <button onclick="filterAccount(this,'nagad')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">Nagad</button>
+            <button onclick="filterAccount(this,'expense')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">Expenses</button>
+            <button onclick="filterAccount(this,'income')"
+                class="acc-tab px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-slate-300 whitespace-nowrap">Income</button>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <h3 class="text-sm font-bold text-slate-800">Transaction Ledger</h3>
+                <div class="relative w-56">
+                    <label for="acc-search" class="sr-only">Search transactions</label>
+                    <input type="text" id="acc-search" placeholder="Search..."
+                        class="w-full pl-9 pr-4 py-1.5 rounded-lg border border-slate-200 text-sm">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                    <tr
+                        class="bg-slate-50 border-b border-slate-100 text-slate-500 text-[10px] uppercase tracking-wider font-bold">
+                        <th class="py-3 px-6">Date & Type</th>
+                        <th class="py-3 px-6">Head</th>
+                        <th class="py-3 px-6">Description</th>
+                        <th class="py-3 px-6">Account</th>
+                        <th class="py-3 px-6 text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-50">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6">
+                            <p class="text-slate-800 font-medium">Today, 10:00 AM</p>
+                            <span
+                                class="text-[10px] bg-success-bg text-success px-1.5 py-0.5 rounded font-bold uppercase">Income</span>
+                        </td>
+                        <td class="py-4 px-6 font-semibold text-slate-800">Sales</td>
+                        <td class="py-4 px-6 text-slate-500">Invoice #INV-2026-042</td>
+                        <td class="py-4 px-6"><span
+                                class="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Cash</span>
+                        </td>
+                        <td class="py-4 px-6 text-right font-bold text-success font-bn">+ ৳ 4,500</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6">
+                            <p class="text-slate-800 font-medium">Today, 09:15 AM</p>
+                            <span
+                                class="text-[10px] bg-red-50 text-alert px-1.5 py-0.5 rounded font-bold uppercase">Expense</span>
+                        </td>
+                        <td class="py-4 px-6 font-semibold text-slate-800">Transport</td>
+                        <td class="py-4 px-6 text-slate-500">Van fare for stock arrival</td>
+                        <td class="py-4 px-6"><span
+                                class="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Cash</span>
+                        </td>
+                        <td class="py-4 px-6 text-right font-bold text-alert font-bn">- ৳ 1,200</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6">
+                            <p class="text-slate-800 font-medium">03 Mar, 06:00 PM</p>
+                            <span
+                                class="text-[10px] bg-success-bg text-success px-1.5 py-0.5 rounded font-bold uppercase">Income</span>
+                        </td>
+                        <td class="py-4 px-6 font-semibold text-slate-800">EMI Collection</td>
+                        <td class="py-4 px-6 text-slate-500">Monthly installment — Abir Hasan</td>
+                        <td class="py-4 px-6"><span
+                                class="text-xs font-bold bg-pink-50 text-pink-600 px-2 py-0.5 rounded">bKash</span></td>
+                        <td class="py-4 px-6 text-right font-bold text-success font-bn">+ ৳ 12,500</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add Expense Modal -->
+        <div id="expense-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-slate-800">Create Expense Voucher</h3>
+                    <button onclick="document.getElementById('expense-modal').classList.add('hidden')"
+                        class="text-slate-400 hover:text-slate-600" title="Close">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="exp-head" class="block text-sm font-medium text-slate-700 mb-1">Expense Head
+                            *</label>
+                        <select id="exp-head" title="Select expense category"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                            <option>Rent & Bills</option>
+                            <option>Staff Salary</option>
+                            <option>Transport</option>
+                            <option>Marketing</option>
+                            <option>Inventory Purchase</option>
+                            <option>Repair & Maintenance</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="exp-desc" class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                        <input type="text" id="exp-desc" placeholder="Details..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="exp-amount" class="block text-sm font-medium text-slate-700 mb-1">Amount (৳)
+                                *</label>
+                            <input type="number" id="exp-amount" placeholder="0.00"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-bn">
+                        </div>
+                        <div>
+                            <label for="exp-account" class="block text-sm font-medium text-slate-700 mb-1">Paid
+                                From</label>
+                            <select id="exp-account" title="Select payment account"
+                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                                <option>Cash</option>
+                                <option>Bank</option>
+                                <option>bKash</option>
+                                <option>Nagad</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="exp-date" class="block text-sm font-medium text-slate-700 mb-1">Date</label>
+                        <input type="date" id="exp-date" title="Expense date"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-8">
+                    <button
+                        class="flex-1 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl font-bn"
+                        onclick="document.getElementById('expense-modal').classList.add('hidden')">বাতিল</button>
+                    <button
+                        class="flex-1 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 custom-shadow rounded-xl"
+                        onclick="UI.showToast('Voucher created!', 'success'); document.getElementById('expense-modal').classList.add('hidden')">Create
+                        Voucher</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            document.getElementById('exp-date').valueAsDate = new Date();
+        });
+
+        function filterAccount(btn, type) {
+            document.querySelectorAll('.acc-tab').forEach(b => {
+                b.classList.remove('bg-primary-600', 'text-white');
+                b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+            });
+            btn.classList.add('bg-primary-600', 'text-white');
+            btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+            if (type !== 'all') UI.showToast('Filtering by: ' + type, 'info');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Staff Management</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Manage salaries, roles, and attendance</p>
+            </div>
+            <button onclick="document.getElementById('employee-modal').classList.remove('hidden')"
+                class="px-5 py-2.5 whitespace-nowrap bg-primary-600 text-white font-semibold rounded-xl text-sm transition-colors hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+                Add Employee
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Staff</p>
+                <p class="text-2xl font-bold text-slate-800 font-bn">08</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Monthly Payroll</p>
+                <p class="text-2xl font-bold text-primary-600 font-bn">৳ 1,25,000</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Salary Paid</p>
+                <p class="text-2xl font-bold text-success font-bn">৳ 90,000</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Salary Due</p>
+                <p class="text-2xl font-bold text-alert font-bn">৳ 35,000</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                        <tr
+                            class="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                            <th class="py-3 px-6 font-medium">Employee Info</th>
+                            <th class="py-3 px-6 font-medium">Join Date</th>
+                            <th class="py-3 px-6 font-medium">Salary</th>
+                            <th class="py-3 px-6 font-medium">Paid / Due</th>
+                            <th class="py-3 px-6 font-medium text-center">Status</th>
+                            <th class="py-3 px-6 font-medium text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
+                                        R</div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">Rahim Ahmed</p>
+                                        <p class="text-xs text-slate-500">Cashier • 017XXXXXXXX</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">01 Jan 2024</td>
+                            <td class="py-4 px-6 text-slate-800 font-bold font-bn">৳ 15,000</td>
+                            <td class="py-4 px-6">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-success font-bold font-bn">৳ 12,000</span>
+                                    <span class="text-slate-300">/</span>
+                                    <span class="text-alert font-bold font-bn">৳ 3,000</span>
+                                </div>
+                                <div class="w-24 h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
+                                    <div class="bg-success h-full w-[80%]"></div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span
+                                    class="bg-success-bg text-success px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">Active</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="openSalaryModal('Rahim Ahmed')"
+                                    class="text-primary-600 hover:text-primary-700 font-semibold text-xs px-3 py-1.5 rounded-lg border border-primary-100 hover:bg-primary-50 transition-colors">Manage
+                                    Salary</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Employee Modal -->
+        <div id="employee-modal"
+            class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-auto hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative z-10">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 font-bn">নতুন স্টাফ যোগ করুন</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                            <input type="text" placeholder="Employee Name"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-primary-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Mobile</label>
+                            <input type="text" placeholder="017XXXXXXXX"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-primary-500 text-sm font-bn">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                            <select title="Select Staff Role"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-primary-500 text-sm">
+                                <option>Cashier</option>
+                                <option>Sales Executive</option>
+                                <option>Manager</option>
+                                <option>Stock Keeper</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Joining Date</label>
+                            <input type="date" id="join-date" title="Select Joining Date"
+                                class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-primary-500 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Monthly Salary (৳)</label>
+                        <input type="number" placeholder="Amount" title="Monthly Salary"
+                            class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-primary-500 text-sm font-bn">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-3 mt-8">
+                    <button
+                        class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors font-bn"
+                        onclick="document.getElementById('employee-modal').classList.add('hidden')">বাতিল</button>
+                    <button
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 custom-shadow rounded-xl transition-colors"
+                        onclick="UI.showToast('Employee added successfully', 'success'); document.getElementById('employee-modal').classList.add('hidden')">Add
+                        Staff</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salary Management Modal -->
+        <div id="salary-modal"
+            class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-auto hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-bold text-slate-800" id="salary-modal-title">Salary Details</h3>
+                    <button onclick="document.getElementById('salary-modal').classList.add('hidden')"
+                        title="Close Salary Modal" class="text-slate-400 hover:text-slate-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6 grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-slate-500 mb-1">Monthly Salary</p>
+                        <p class="text-lg font-bold text-slate-800 font-bn">৳ 15,000</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 mb-1">Current Due</p>
+                        <p class="text-lg font-bold text-alert font-bn">৳ 3,000</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Record New Payment (৳)</label>
+                        <div class="flex gap-2">
+                            <input type="number" placeholder="Amount" title="Payment Amount"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-primary-500 text-lg font-bold font-bn">
+                            <button title="Confirm Payment"
+                                class="px-5 bg-primary-600 text-white font-bold rounded-xl custom-shadow hover:bg-primary-700 transition-colors"
+                                onclick="UI.showToast('Salary record updated', 'success'); document.getElementById('salary-modal').classList.add('hidden')">PAY</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Month / Duration (YYYY-MM)</label>
+                        <input type="month" title="Select Salary Month"
+                            class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm">
+                        <p class="text-[10px] text-slate-400 mt-1">* Format: Year-Month (e.g., 2026-03)</p>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Recent Payments</h4>
+                    <div class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
+                        <div class="flex items-center justify-between p-2 border-b border-slate-50 text-sm">
+                            <span class="text-slate-600">05 Feb, 2026</span>
+                            <span class="font-bold text-success font-bn">৳ 12,000</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 border-b border-slate-50 text-sm opacity-60">
+                            <span class="text-slate-600">02 Jan, 2026</span>
+                            <span class="font-bold text-success font-bn">৳ 15,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            document.getElementById('join-date').valueAsDate = new Date();
+        });
+
+        function openSalaryModal(name) {
+            document.getElementById('salary-modal-title').textContent = `Salary Details: ${name}`;
+            document.getElementById('salary-modal').classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
+</body>
+
+</html>

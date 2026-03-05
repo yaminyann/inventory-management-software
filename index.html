@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextWeb Inventory</title>
+    <!-- Tailwind setup -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script>
+        // Redirect logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load state
+            const state = localStorage.getItem('nextweb_app_state');
+            if (state && JSON.parse(state).isLoggedIn) {
+                window.location.href = 'dashboard.html';
+            } else {
+                window.location.href = 'register.html';
+            }
+        });
+    </script>
+</head>
+<body class="bg-slate-50 flex items-center justify-center h-screen">
+    <div class="animate-pulse flex flex-col items-center">
+        <div class="w-16 h-16 rounded-2xl bg-primary-600 flex items-center justify-center text-white font-bold text-3xl custom-shadow mb-4">
+            N
+        </div>
+        <p class="text-slate-500 font-medium">Loading NextWeb POS...</p>
+    </div>
+</body>
+</html>

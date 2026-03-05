@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dues & Receivables | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Dues & Receivables</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Track and settle outstanding customer dues</p>
+            </div>
+            <div class="flex gap-2">
+                <div class="flex bg-white border border-slate-200 rounded-xl overflow-hidden text-sm font-semibold">
+                    <button onclick="switchTab('customers')" id="tab-customers"
+                        class="px-5 py-2.5 bg-primary-600 text-white transition-all">Customer Dues</button>
+                    <button onclick="switchTab('suppliers')" id="tab-suppliers"
+                        class="px-5 py-2.5 text-slate-600 hover:bg-slate-50 transition-all">Supplier Dues</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Customer Due</p>
+                <p class="text-2xl font-bold text-alert font-bn">৳ 48,500</p>
+                <p class="text-xs text-slate-400 mt-1">12 customers with balance</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Collected This Month</p>
+                <p class="text-2xl font-bold text-success font-bn">৳ 22,000</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Overdue (30+ Days)</p>
+                <p class="text-2xl font-bold text-orange-500 font-bn">৳ 12,500</p>
+                <p class="text-xs text-orange-400 mt-1 font-medium">3 critical accounts</p>
+            </div>
+        </div>
+
+        <!-- Dues Table -->
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-50 flex items-center gap-3 bg-slate-50/50">
+                <div class="relative flex-grow max-w-xs">
+                    <input type="text" placeholder="Search customer..." title="Search dues"
+                        class="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:border-primary-500">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left whitespace-nowrap">
+                    <thead>
+                        <tr class="text-slate-500 text-[10px] uppercase font-bold tracking-widest bg-slate-50/30">
+                            <th class="py-3 px-6">Customer</th>
+                            <th class="py-3 px-6">Last Invoice</th>
+                            <th class="py-3 px-6">Total Due</th>
+                            <th class="py-3 px-6">Overdue Since</th>
+                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50" id="dues-tbody">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800">Rakib Uddin</p>
+                                <p class="text-xs text-slate-400">017XXXXXXXX</p>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">#INV-2026-018 <span class="text-xs text-slate-400">• 15
+                                    Jan</span></td>
+                            <td class="py-4 px-6"><span class="font-bold text-alert font-bn">৳ 12,500</span></td>
+                            <td class="py-4 px-6"><span class="text-orange-500 font-semibold text-xs">48 Days</span>
+                            </td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-red-50 text-alert px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Critical</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="openCollectModal('Rakib Uddin', 12500)"
+                                    class="text-white bg-primary-600 hover:bg-primary-700 font-bold text-xs px-4 py-1.5 rounded-lg transition-colors">Collect</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800">Karim Ahmed</p>
+                                <p class="text-xs text-slate-400">018XXXXXXXX</p>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">#INV-2026-024 <span class="text-xs text-slate-400">• 25
+                                    Feb</span></td>
+                            <td class="py-4 px-6"><span class="font-bold text-slate-800 font-bn">৳ 8,000</span></td>
+                            <td class="py-4 px-6"><span class="text-slate-500 font-semibold text-xs">07 Days</span></td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-orange-50 text-orange-600 px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Pending</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="openCollectModal('Karim Ahmed', 8000)"
+                                    class="text-white bg-primary-600 hover:bg-primary-700 font-bold text-xs px-4 py-1.5 rounded-lg transition-colors">Collect</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800">Sumaiya Begum</p>
+                                <p class="text-xs text-slate-400">019XXXXXXXX</p>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">#INV-2026-028 <span class="text-xs text-slate-400">• 01
+                                    Mar</span></td>
+                            <td class="py-4 px-6"><span class="font-bold text-slate-800 font-bn">৳ 4,500</span></td>
+                            <td class="py-4 px-6"><span class="text-slate-500 font-semibold text-xs">03 Days</span></td>
+                            <td class="py-4 px-6"><span
+                                    class="bg-success-bg text-success px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Recent</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="openCollectModal('Sumaiya Begum', 4500)"
+                                    class="text-white bg-primary-600 hover:bg-primary-700 font-bold text-xs px-4 py-1.5 rounded-lg transition-colors">Collect</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Collect Modal -->
+        <div id="collect-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Collect Due Payment</h3>
+                        <p class="text-sm text-slate-500 mt-0.5" id="collect-customer-name">Customer Name</p>
+                    </div>
+                    <button onclick="document.getElementById('collect-modal').classList.add('hidden')" title="Close"
+                        class="text-slate-400 hover:text-slate-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bg-alert-bg rounded-xl p-4 mb-6 flex justify-between items-center">
+                    <p class="text-sm font-medium text-slate-700">Total Due</p>
+                    <p class="text-2xl font-black text-alert font-bn" id="collect-total-due">৳ 0</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Amount to Collect (৳)</label>
+                        <input type="number" id="collect-amount" placeholder="Enter amount" title="Amount to collect"
+                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-primary-500 text-xl font-bold font-bn">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Payment Method</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="selectPayMethod(this,'Cash')"
+                                class="pay-method-btn px-3 py-2 border-2 border-primary-500 bg-primary-50 text-primary-700 font-semibold rounded-xl text-sm transition-all">Cash</button>
+                            <button onclick="selectPayMethod(this,'bKash')"
+                                class="pay-method-btn px-3 py-2 border-2 border-slate-200 text-slate-600 font-semibold rounded-xl text-sm transition-all hover:border-slate-300">bKash</button>
+                            <button onclick="selectPayMethod(this,'Bank')"
+                                class="pay-method-btn px-3 py-2 border-2 border-slate-200 text-slate-600 font-semibold rounded-xl text-sm transition-all hover:border-slate-300">Bank</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Note (Optional)</label>
+                        <input type="text" placeholder="e.g., Partial payment for Jan invoice" title="Note"
+                            class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-8">
+                    <button
+                        class="flex-1 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors font-bn"
+                        onclick="document.getElementById('collect-modal').classList.add('hidden')">বাতিল</button>
+                    <button
+                        class="flex-1 py-2.5 text-sm font-semibold text-white bg-success hover:bg-success-hover custom-shadow rounded-xl transition-colors"
+                        onclick="confirmCollect()">✓ Confirm Collection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => window.appState.requireAuth());
+
+        let currentTab = 'customers';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            ['customers', 'suppliers'].forEach(t => {
+                const btn = document.getElementById('tab-' + t);
+                if (t === tab) {
+                    btn.classList.add('bg-primary-600', 'text-white');
+                    btn.classList.remove('text-slate-600', 'hover:bg-slate-50');
+                } else {
+                    btn.classList.remove('bg-primary-600', 'text-white');
+                    btn.classList.add('text-slate-600', 'hover:bg-slate-50');
+                }
+            });
+        }
+
+        function openCollectModal(name, amount) {
+            document.getElementById('collect-customer-name').textContent = name;
+            document.getElementById('collect-total-due').textContent = '৳ ' + amount.toLocaleString();
+            document.getElementById('collect-amount').value = amount;
+            document.getElementById('collect-modal').classList.remove('hidden');
+        }
+
+        function selectPayMethod(btn, method) {
+            document.querySelectorAll('.pay-method-btn').forEach(b => {
+                b.classList.remove('border-primary-500', 'bg-primary-50', 'text-primary-700');
+                b.classList.add('border-slate-200', 'text-slate-600');
+            });
+            btn.classList.add('border-primary-500', 'bg-primary-50', 'text-primary-700');
+            btn.classList.remove('border-slate-200', 'text-slate-600');
+        }
+
+        function confirmCollect() {
+            const amount = document.getElementById('collect-amount').value;
+            if (!amount || amount <= 0) { UI.showToast('Please enter a valid amount', 'error'); return; }
+            UI.showToast(`৳ ${parseFloat(amount).toLocaleString()} collected successfully!`, 'success');
+            document.getElementById('collect-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

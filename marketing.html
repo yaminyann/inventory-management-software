@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing & SMS | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Marketing & SMS</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Targeted SMS campaigns for customers, staff and installment
+                    reminders</p>
+            </div>
+            <button onclick="openCampaignWizard()"
+                class="px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+                New Campaign
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 text-center">
+                <p class="text-2xl font-bold text-slate-800 font-bn">08</p>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">Total Campaigns</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 text-center">
+                <p class="text-2xl font-bold text-success font-bn">1,240</p>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">SMS Sent</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 text-center">
+                <p class="text-2xl font-bold text-primary-600 font-bn">328</p>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">Customers Reached</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl custom-shadow border border-slate-100 text-center">
+                <p class="text-2xl font-bold text-orange-500 font-bn">02</p>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">Scheduled</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Campaigns List -->
+            <div class="lg:col-span-2 space-y-4">
+                <h3 class="text-sm font-bold text-slate-800">Recent Campaigns</h3>
+                <div id="campaigns-list" class="space-y-3">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Templates Panel -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-slate-800">SMS Templates</h3>
+                    <button onclick="openTemplateModal()" class="text-xs font-bold text-primary-600 hover:underline">+
+                        New Template</button>
+                </div>
+                <div class="space-y-3" id="templates-list">
+                    <!-- Filled by JS -->
+                </div>
+                <div class="bg-slate-50 border border-dashed border-slate-200 rounded-xl p-4">
+                    <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Template Variables</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{name}</span>
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{phone}</span>
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{date}</span>
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{amount}</span>
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{subject}</span>
+                        <span
+                            class="bg-white border border-primary-100 text-primary-600 px-2 py-1 rounded-lg text-xs font-bold font-mono">{shop}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-2">Variables auto-replace with real data when sending</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Wizard Modal -->
+        <div id="campaign-wizard" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative z-10 max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">New SMS Campaign</h3>
+                        <!-- Step indicator -->
+                        <div class="flex items-center gap-2 mt-2">
+                            <div class="flex items-center gap-1.5" id="step-1-ind">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center">
+                                    1</div>
+                                <span class="text-xs font-medium text-primary-600">Audience</span>
+                            </div>
+                            <div class="w-8 h-px bg-slate-200"></div>
+                            <div class="flex items-center gap-1.5" id="step-2-ind">
+                                <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-xs font-bold flex items-center justify-center"
+                                    id="step-2-num">2</div>
+                                <span class="text-xs font-medium text-slate-400" id="step-2-lbl">Message</span>
+                            </div>
+                            <div class="w-8 h-px bg-slate-200"></div>
+                            <div class="flex items-center gap-1.5" id="step-3-ind">
+                                <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-xs font-bold flex items-center justify-center"
+                                    id="step-3-num">3</div>
+                                <span class="text-xs font-medium text-slate-400" id="step-3-lbl">Send</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('campaign-wizard').classList.add('hidden')" title="Close"
+                        class="text-slate-400 hover:text-slate-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- STEP 1: Audience -->
+                <div id="wizard-step-1" class="p-6">
+                    <h4 class="font-bold text-slate-800 mb-4">Select Target Audience</h4>
+                    <div class="space-y-3" id="audience-options">
+                        <label
+                            class="flex items-start gap-3 p-4 border-2 border-primary-300 bg-primary-50 rounded-xl cursor-pointer">
+                            <input type="radio" name="audience" value="all" class="mt-0.5 accent-primary-600" checked>
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">All Customers</p>
+                                <p class="text-xs text-slate-500">Send to all registered customers (328 contacts)</p>
+                            </div>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-4 border-2 border-transparent hover:border-slate-200 bg-white rounded-xl cursor-pointer">
+                            <input type="radio" name="audience" value="installment" class="mt-0.5 accent-primary-600">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Installment Due Customers</p>
+                                <p class="text-xs text-slate-500">Upcoming EMI due in next 7 days (24 contacts)</p>
+                            </div>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-4 border-2 border-transparent hover:border-slate-200 bg-white rounded-xl cursor-pointer">
+                            <input type="radio" name="audience" value="due" class="mt-0.5 accent-primary-600">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Customers with Outstanding Due</p>
+                                <p class="text-xs text-slate-500">Customers who have unpaid balance (12 contacts)</p>
+                            </div>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-4 border-2 border-transparent hover:border-slate-200 bg-white rounded-xl cursor-pointer">
+                            <input type="radio" name="audience" value="product" class="mt-0.5 accent-primary-600">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Product-Specific Buyers</p>
+                                <p class="text-xs text-slate-500">Target customers who bought a specific product</p>
+                                <select title="Select product"
+                                    class="mt-2 w-full text-xs border border-slate-200 rounded-lg px-3 py-1.5">
+                                    <option>Select Product...</option>
+                                    <option>Samsung A54</option>
+                                    <option>Miniket Rice</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label
+                            class="flex items-start gap-3 p-4 border-2 border-transparent hover:border-slate-200 bg-white rounded-xl cursor-pointer">
+                            <input type="radio" name="audience" value="staff" class="mt-0.5 accent-primary-600">
+                            <div>
+                                <p class="font-bold text-slate-800 text-sm">Staff / Employees</p>
+                                <p class="text-xs text-slate-500">Send to all active staff members (8 recipients)</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button onclick="wizardNext(2)"
+                            class="px-6 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Next:
+                            Message →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Template/Message -->
+                <div id="wizard-step-2" class="p-6 hidden">
+                    <h4 class="font-bold text-slate-800 mb-4">Compose Message</h4>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Use Template</label>
+                        <select id="template-picker" title="Select template" onchange="loadTemplate(this.value)"
+                            class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm">
+                            <option value="">-- Write custom message --</option>
+                            <option value="promo">Promotional Offer</option>
+                            <option value="installment">Installment Reminder</option>
+                            <option value="due">Due Payment Reminder</option>
+                            <option value="welcome">Welcome Message</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">SMS Message <span
+                                class="text-slate-400 font-normal">(Use variables like {name}, {amount})</span></label>
+                        <textarea id="sms-body"
+                            class="w-full h-36 px-4 py-3 border-2 border-slate-200 rounded-xl text-sm resize-none focus:border-primary-500 leading-relaxed"
+                            placeholder="Type your message here...
+Use {name}, {phone}, {date}, {amount}, {subject}, {shop}"></textarea>
+                        <div class="flex justify-between mt-1">
+                            <p class="text-xs text-slate-400">Variables will be auto-filled per recipient</p>
+                            <p class="text-xs text-slate-400" id="char-count">0 / 160</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Preview (for Abir
+                            Hasan)</p>
+                        <p class="text-sm text-slate-700 italic" id="sms-preview">Your message will appear here...</p>
+                    </div>
+                    <div class="flex justify-between mt-6">
+                        <button onclick="wizardNext(1)"
+                            class="px-6 py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl text-sm hover:bg-slate-50">←
+                            Back</button>
+                        <button onclick="wizardNext(3)"
+                            class="px-6 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Next:
+                            Review →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Send -->
+                <div id="wizard-step-3" class="p-6 hidden">
+                    <h4 class="font-bold text-slate-800 mb-4">Review & Send</h4>
+                    <div class="bg-slate-50 rounded-2xl p-4 space-y-3 text-sm mb-6">
+                        <div class="flex justify-between"><span class="text-slate-500">Target Audience</span><span
+                                class="font-bold text-slate-800" id="review-audience">All Customers</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Estimated Recipients</span><span
+                                class="font-bold text-primary-600 font-bn" id="review-count">328</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">SMS Length</span><span
+                                class="font-bold text-slate-800" id="review-length">-- chars</span></div>
+                        <div class="border-t border-slate-200 pt-3">
+                            <p class="text-slate-500 mb-1">Message Preview:</p>
+                            <p class="text-slate-700 text-xs italic" id="review-preview">--</p>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Schedule</label>
+                        <div class="flex gap-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="schedule" value="now" checked class="accent-primary-600">
+                                <span class="text-sm font-medium text-slate-700">Send Now</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="schedule" value="later" class="accent-primary-600">
+                                <span class="text-sm font-medium text-slate-700">Schedule Later</span>
+                            </label>
+                        </div>
+                        <input type="datetime-local" id="schedule-time" title="Schedule time"
+                            class="mt-2 w-full px-4 py-2 border border-slate-200 rounded-xl text-sm hidden">
+                    </div>
+                    <div class="flex justify-between">
+                        <button onclick="wizardNext(2)"
+                            class="px-6 py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl text-sm hover:bg-slate-50">←
+                            Back</button>
+                        <button onclick="sendCampaign()"
+                            class="px-6 py-2.5 bg-success hover:bg-success-hover text-white font-semibold rounded-xl text-sm custom-shadow flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Send Campaign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Modal -->
+        <div id="template-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative z-10">
+                <h3 class="text-lg font-bold text-slate-800 mb-6">New SMS Template</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Template Name</label>
+                        <input type="text" placeholder="e.g., Monthly Offer" title="Template name"
+                            class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Template Body</label>
+                        <textarea
+                            class="w-full h-32 px-4 py-3 border-2 border-slate-200 rounded-xl text-sm resize-none focus:border-primary-500"
+                            placeholder="Dear {name}, ..."></textarea>
+                        <p class="text-xs text-slate-400 mt-1">Use: {name} {phone} {date} {amount} {subject} {shop}</p>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button onclick="document.getElementById('template-modal').classList.add('hidden')"
+                        class="flex-1 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl font-bn">বাতিল</button>
+                    <button onclick="saveTemplate()"
+                        class="flex-1 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 custom-shadow rounded-xl">Save
+                        Template</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            renderCampaigns();
+            renderTemplates();
+
+            const smsBody = document.getElementById('sms-body');
+            smsBody.addEventListener('input', () => {
+                const len = smsBody.value.length;
+                document.getElementById('char-count').textContent = `${len} / 160`;
+                updatePreview();
+            });
+
+            document.querySelectorAll('input[name="schedule"]').forEach(r => {
+                r.addEventListener('change', () => {
+                    const schedTime = document.getElementById('schedule-time');
+                    if (r.value === 'later') schedTime.classList.remove('hidden');
+                    else schedTime.classList.add('hidden');
+                });
+            });
+        });
+
+        const demoTemplates = [
+            { id: 'promo', name: 'Promotional Offer', body: 'Dear {name}, Great news! Get 20% off on all products this weekend. Visit us now! - {shop}' },
+            { id: 'installment', name: 'Installment Reminder', body: 'Dear {name}, your installment of {amount} is due on {date}. Please make payment on time. - {shop}' },
+            { id: 'due', name: 'Due Payment Reminder', body: 'Dear {name}, your outstanding balance of {amount} is pending. Please clear your dues. Call: {phone}. - {shop}' },
+            { id: 'welcome', name: 'Welcome Message', body: 'Welcome {name}! Thank you for shopping with {shop}. Enjoy exclusive offers and loyalty rewards. We are happy to serve you!' },
+        ];
+
+        const demoCampaigns = [
+            { name: 'Eid Offer 2026', audience: 'All Customers', count: 328, status: 'sent', date: '01 Feb' },
+            { name: 'Installment Reminder — Mar', audience: 'Installment Due', count: 24, status: 'sent', date: '04 Mar' },
+            { name: 'Weekend Flash Sale', audience: 'Product Buyers', count: 85, status: 'scheduled', date: '06 Mar' },
+            { name: 'Staff Notice', audience: 'Staff', count: 8, status: 'draft', date: '—' },
+        ];
+
+        function renderCampaigns() {
+            const colors = { sent: 'bg-success-bg text-success', scheduled: 'bg-orange-50 text-orange-600', draft: 'bg-slate-100 text-slate-600' };
+            document.getElementById('campaigns-list').innerHTML = demoCampaigns.map(c => `
+        <div class="bg-white rounded-2xl border border-slate-100 custom-shadow p-4 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800 text-sm">${c.name}</p>
+                    <p class="text-xs text-slate-500">${c.audience} · ${c.count} recipients</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-400">${c.date}</span>
+                <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${colors[c.status]}">${c.status}</span>
+                <button class="text-slate-400 hover:text-primary-600" title="View Campaign">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>`).join('');
+        }
+
+        function renderTemplates() {
+            document.getElementById('templates-list').innerHTML = demoTemplates.map(t => `
+        <div class="bg-white border border-slate-100 rounded-xl p-4 custom-shadow">
+            <div class="flex items-center justify-between mb-2">
+                <p class="font-bold text-slate-800 text-sm">${t.name}</p>
+                <button onclick="editTemplate('${t.id}')" class="text-xs text-primary-600 font-bold hover:underline">Edit</button>
+            </div>
+            <p class="text-xs text-slate-500 line-clamp-2">${t.body}</p>
+        </div>`).join('');
+        }
+
+        function openCampaignWizard() {
+            wizardNext(1);
+            document.getElementById('campaign-wizard').classList.remove('hidden');
+        }
+
+        function wizardNext(step) {
+            [1, 2, 3].forEach(s => {
+                document.getElementById(`wizard-step-${s}`).classList.add('hidden');
+                const num = document.getElementById(`step-${s}-num`);
+                const lbl = document.getElementById(`step-${s}-lbl`);
+                if (num && lbl) { num.className = 'w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-xs font-bold flex items-center justify-center'; lbl.className = 'text-xs font-medium text-slate-400'; }
+            });
+            document.getElementById(`wizard-step-${step}`).classList.remove('hidden');
+            const num = document.getElementById(`step-${step}-num`);
+            const lbl = document.getElementById(`step-${step}-lbl`);
+            if (num && lbl) { num.className = 'w-6 h-6 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center'; lbl.className = 'text-xs font-medium text-primary-600'; }
+
+            if (step === 3) {
+                const audience = document.querySelector('input[name="audience"]:checked')?.value || 'all';
+                const audienceLabels = { all: 'All Customers (328)', installment: 'Installment Due (24)', due: 'Due Customers (12)', product: 'Product Buyers (85)', staff: 'Staff (8)' };
+                const counts = { all: 328, installment: 24, due: 12, product: 85, staff: 8 };
+                document.getElementById('review-audience').textContent = audienceLabels[audience] || audience;
+                document.getElementById('review-count').textContent = counts[audience] || '--';
+                const body = document.getElementById('sms-body').value;
+                document.getElementById('review-length').textContent = `${body.length} characters`;
+                document.getElementById('review-preview').textContent = body.replace('{name}', 'Abir Hasan').replace('{phone}', '017XXXXXX').replace('{date}', '10 Mar 2026').replace('{amount}', '৳ 5,000').replace('{shop}', 'NextWeb Store');
+            }
+        }
+
+        function loadTemplate(id) {
+            const t = demoTemplates.find(x => x.id === id);
+            if (t) {
+                document.getElementById('sms-body').value = t.body;
+                updatePreview();
+                document.getElementById('char-count').textContent = `${t.body.length} / 160`;
+            }
+        }
+
+        function updatePreview() {
+            const body = document.getElementById('sms-body').value;
+            const preview = body.replace('{name}', 'Abir Hasan').replace('{phone}', '017XXXXXX').replace('{date}', '10 Mar 2026').replace('{amount}', '৳ 5,000').replace('{shop}', 'NextWeb Store').replace('{subject}', 'March Offer');
+            document.getElementById('sms-preview').textContent = preview || 'Your message will appear here...';
+        }
+
+        function sendCampaign() {
+            document.getElementById('campaign-wizard').classList.add('hidden');
+            UI.showToast('Campaign sent to all recipients! 📨', 'success');
+        }
+
+        function openTemplateModal() { document.getElementById('template-modal').classList.remove('hidden'); }
+
+        function saveTemplate() {
+            UI.showToast('Template saved!', 'success');
+            document.getElementById('template-modal').classList.add('hidden');
+        }
+
+        function editTemplate(id) {
+            const t = demoTemplates.find(x => x.id === id);
+            UI.showToast('Editing: ' + t.name, 'info');
+            openTemplateModal();
+        }
+    </script>
+</body>
+
+</html>

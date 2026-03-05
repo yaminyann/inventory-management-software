@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brands | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Brand Management</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Manage your product brands and manufacturers</p>
+            </div>
+            <button onclick="openBrandModal()"
+                class="px-5 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                    </path>
+                </svg>
+                Add New Brand
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div
+                    class="w-12 h-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center text-xl">
+                    🏷️</div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Brands</p>
+                    <p class="text-xl font-bold text-slate-800" id="stat-total-brands">12</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center text-xl">✅
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Brands</p>
+                    <p class="text-xl font-bold text-slate-800">12</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                    📦
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Linked Products</p>
+                    <p class="text-xl font-bold text-slate-800">450</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brands Table -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-50 flex flex-col sm:flex-row gap-4 justify-between bg-slate-50/30">
+                <div class="relative max-w-sm w-full">
+                    <input type="text" id="brand-search" placeholder="Search brands..."
+                        oninput="renderBrands(this.value)"
+                        class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 transition-all">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr
+                            class="bg-slate-50 border-b border-slate-100 text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+                            <th class="py-4 px-6">Brand Name</th>
+                            <th class="py-4 px-6">Origin/Country</th>
+                            <th class="py-4 px-6 text-center">Products</th>
+                            <th class="py-4 px-6">Status</th>
+                            <th class="py-4 px-6 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50" id="brands-table-body">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add/Edit Modal -->
+        <div id="brand-modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm shadow-xl"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10">
+                <h3 class="text-lg font-bold text-slate-800 mb-6" id="modal-title">Add New Brand</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Brand Name *</label>
+                        <input type="text" id="b-name" placeholder="e.g. Samsung, Unilever"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Country of Origin</label>
+                        <input type="text" id="b-origin" placeholder="e.g. South Korea, Bangladesh"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                        <select id="b-status" title="Brand status"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-8">
+                    <button onclick="document.getElementById('brand-modal').classList.add('hidden')"
+                        class="flex-1 py-2.5 border border-slate-200 text-slate-600 font-semibold rounded-xl text-sm font-bn">বাতিল</button>
+                    <button onclick="saveBrand()"
+                        class="flex-1 py-2.5 bg-primary-600 text-white font-bold rounded-xl text-sm hover:bg-primary-700 custom-shadow">Save
+                        Brand</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        let brands = [
+            { id: 1, name: 'Radhuni', origin: 'Bangladesh', products: 45, status: 'active' },
+            { id: 2, name: 'Samsung', origin: 'South Korea', products: 120, status: 'active' },
+            { id: 3, name: 'Unilever', origin: 'UK', products: 85, status: 'active' },
+            { id: 4, name: 'Nestle', origin: 'Switzerland', products: 60, status: 'active' },
+            { id: 5, name: 'Walton', origin: 'Bangladesh', products: 140, status: 'active' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+            renderBrands();
+        });
+
+        function renderBrands(search = '') {
+            const tbody = document.getElementById('brands-table-body');
+            const filtered = brands.filter(b => b.name.toLowerCase().includes(search.toLowerCase()));
+            tbody.innerHTML = filtered.map(b => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-400">
+                                ${b.name.charAt(0)}
+                            </div>
+                            <p class="font-bold text-slate-800">${b.name}</p>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6 text-slate-500 font-medium">${b.origin || 'N/A'}</td>
+                    <td class="py-4 px-6 text-center font-bold text-slate-700 font-bn">${b.products}</td>
+                    <td class="py-4 px-6">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${b.status === 'active' ? 'bg-success-bg text-success' : 'bg-slate-100 text-slate-400'}">
+                            ${b.status}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <div class="flex justify-end gap-2">
+                            <button class="p-1.5 text-slate-400 hover:text-primary-600 transition-colors" title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </button>
+                            <button class="p-1.5 text-slate-400 hover:text-alert transition-colors" title="Delete">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('stat-total-brands').textContent = brands.length;
+        }
+
+        function openBrandModal() {
+            document.getElementById('brand-modal').classList.remove('hidden');
+            document.getElementById('b-name').value = '';
+            document.getElementById('b-origin').value = '';
+        }
+
+        function saveBrand() {
+            const name = document.getElementById('b-name').value;
+            if (!name) { UI.showToast('Brand name is required', 'error'); return; }
+            const newBrand = {
+                id: brands.length + 1,
+                name,
+                origin: document.getElementById('b-origin').value,
+                products: 0,
+                status: document.getElementById('b-status').value
+            };
+            brands.unshift(newBrand);
+            renderBrands();
+            document.getElementById('brand-modal').classList.add('hidden');
+            UI.showToast(`Brand "${name}" added successfully!`, 'success');
+        }
+    </script>
+</body>
+
+</html>

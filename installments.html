@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installments & EMI | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Installment (EMI) Plans</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Track and manage credit sales for Electronics & Hardware</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="UI.showToast('Generating installment reports...', 'info')"
+                    class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-50 transition-all flex items-center gap-2 custom-shadow">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Reports
+                </button>
+                <button onclick="UI.showToast('Only accessible from POS/Sales Flow', 'warning')"
+                    class="px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-xl text-sm hover:bg-primary-700 custom-shadow flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    New EMI Plan
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Active Plans</p>
+                <p class="text-2xl font-bold text-slate-800 font-bn">24</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total EMI Receivables</p>
+                <p class="text-2xl font-bold text-primary-600 font-bn">৳ 4,85,000</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Collected This Month</p>
+                <p class="text-2xl font-bold text-success font-bn">৳ 1,12,000</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl custom-shadow border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Overdue Today</p>
+                <p class="text-2xl font-bold text-alert font-bn">৳ 12,500</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-alert"></span>
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Overdue Installments</span>
+                </div>
+                <button class="text-xs font-bold text-primary-600 hover:underline">Send Reminders (SMS)</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left whitespace-nowrap">
+                    <thead>
+                        <tr class="text-slate-500 text-[10px] uppercase font-bold tracking-widest bg-slate-50/30">
+                            <th class="py-3 px-6">Customer</th>
+                            <th class="py-3 px-6">Product</th>
+                            <th class="py-3 px-6">Remaining</th>
+                            <th class="py-3 px-6">Next Due</th>
+                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800">Abir Hasan</p>
+                                <p class="text-xs text-slate-500">018XXXXXXXX</p>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">Samsung Galaxy S24 Ultra</td>
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-primary-600 font-bn">৳ 85,000</p>
+                                <p class="text-[10px] text-slate-400 font-medium">08 of 12 Months Left</p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <p class="text-alert font-bold font-bn">৳ 12,500</p>
+                                <p class="text-[10px] text-alert font-medium uppercase tracking-tighter">Overdue 02 Days
+                                </p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span
+                                    class="bg-alert-bg text-alert px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Critical</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="window.location.href='customers.html'"
+                                    class="text-primary-600 hover:text-primary-700 font-bold text-xs p-2">Pay
+                                    Due</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800">Mehedi Hasan</p>
+                                <p class="text-xs text-slate-500">019XXXXXXXX</p>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">Walton G-Series Refrigerator</td>
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-slate-800 font-bn">৳ 12,000</p>
+                                <p class="text-[10px] text-slate-400 font-medium">02 of 06 Months Left</p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <p class="text-slate-600 font-bold font-bn">৳ 6,000</p>
+                                <p class="text-[10px] text-slate-400 font-medium">Due in 12 Days</p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span
+                                    class="bg-success-bg text-success px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Collecting</span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="UI.showToast('EMI Detail modal...', 'info')"
+                                    class="text-primary-600 hover:text-primary-700 font-bold text-xs p-2">Details</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => window.appState.requireAuth());
+    </script>
+</body>
+
+</html>

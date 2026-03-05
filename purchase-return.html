@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Return | NextWeb Inventory</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+    <div id="app-layout">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Purchase Return</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Return products to supplier and issue refunds</p>
+            </div>
+            <button
+                class="px-5 py-2.5 whitespace-nowrap bg-alert text-white font-semibold rounded-xl text-sm transition-colors hover:bg-red-600 custom-shadow flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z">
+                    </path>
+                </svg>
+                New Return
+            </button>
+        </div>
+
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div
+                class="p-6 border-b border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
+                <div class="relative w-full md:w-96 hidden md:block">
+                    <input type="text" placeholder="Search return invoices..."
+                        class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                        <th class="py-3 px-6 font-medium">Return ID</th>
+                        <th class="py-3 px-6 font-medium">Supplier</th>
+                        <th class="py-3 px-6 font-medium">Products</th>
+                        <th class="py-3 px-6 font-medium">Total Amount</th>
+                        <th class="py-3 px-6 font-medium">Refund Method</th>
+                        <th class="py-3 px-6 font-medium text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-50" id="purchase-return-list">
+                    <!-- Demo Data -->
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6 font-semibold text-primary-600">#PR-1001</td>
+                        <td class="py-4 px-6 text-slate-800 font-medium">ACI Foods Limited</td>
+                        <td class="py-4 px-6 text-slate-600">Fresh Milk 1L (x5)</td>
+                        <td class="py-4 px-6 font-bold text-slate-800 font-bn">৳ 450</td>
+                        <td class="py-4 px-6 text-slate-600">Adjust Due</td>
+                        <td class="py-4 px-6 text-center"><span
+                                class="bg-success-bg text-success px-2 py-1 rounded-lg text-xs font-semibold">Processed</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6 font-semibold text-primary-600">#PR-1002</td>
+                        <td class="py-4 px-6 text-slate-800 font-medium">Pran RFL Group</td>
+                        <td class="py-4 px-6 text-slate-600">All (Complete Invoice)</td>
+                        <td class="py-4 px-6 font-bold text-slate-800 font-bn">৳ 12,500</td>
+                        <td class="py-4 px-6 text-slate-600">bKash (017XXXXXX)</td>
+                        <td class="py-4 px-6 text-center"><span
+                                class="bg-orange-50 text-orange-600 px-2 py-1 rounded-lg text-xs font-semibold">Pending</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden p-8 text-center flex-col items-center justify-center min-h-[300px]">
+                <div
+                    class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-4 text-slate-400 mx-auto">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11v9h-2v-9h-4v9h-2v-9H7v9H5v-9H3v-2h18v2h-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">No Returns Found</h3>
+                <p class="text-slate-500 text-sm max-w-sm mx-auto">You have not created any purchase returns yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock & Warehouses | NextWeb Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-slate-50">
+
+    <div id="app-layout">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 tracking-tight">Stock Management</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Track inventory across all branches</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <button
+                    class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-50 flex items-center gap-2 custom-shadow"
+                    title="Download Excel Report">
+                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                    </svg>
+                    Excel
+                </button>
+                <button
+                    class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl text-sm hover:bg-slate-50 flex items-center gap-2 custom-shadow"
+                    title="Download PDF Report">
+                    <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z" />
+                    </svg>
+                    PDF Stock
+                </button>
+                <button onclick="document.getElementById('transfer-modal').classList.remove('hidden')"
+                    class="px-5 py-2 whitespace-nowrap bg-primary-600 text-white font-semibold rounded-xl text-sm transition-colors hover:bg-primary-700 custom-shadow focus:outline-none flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    Stock Transfer
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl custom-shadow border border-slate-100 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex gap-2 text-sm font-medium">
+                    <button class="px-4 py-1.5 rounded-lg text-slate-500 hover:bg-slate-50">Low Stock Only</button>
+                </div>
+                <!-- Category Filter -->
+                <div class="flex gap-2">
+                    <select id="stock-category-filter" title="Filter by Category"
+                        class="text-xs font-bold px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-600 focus:ring-0 cursor-pointer">
+                        <option value="all">All Categories</option>
+                        <option value="Grocery">Grocery</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Cosmetics">Cosmetics</option>
+                    </select>
+                </div>
+                <div class="relative w-full sm:w-64">
+                    <label for="stock-search" class="sr-only">Search item</label>
+                    <input type="text" id="stock-search" placeholder="Search item..."
+                        class="w-full pl-9 pr-4 py-1.5 rounded-lg border border-slate-200 text-sm">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
+                    <thead>
+                        <tr
+                            class="bg-slate-50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider">
+                            <th class="py-3 px-6 font-medium">Item Name</th>
+                            <th class="py-3 px-6 font-medium">Purchased</th>
+                            <th class="py-3 px-6 font-medium">Sold</th>
+                            <th class="py-3 px-6 font-medium">Remaining</th>
+                            <th class="py-3 px-6 font-medium">Valuation</th>
+                            <th class="py-3 px-6 font-medium">Auto Tags</th>
+                            <th class="py-3 px-6 font-medium text-center">Quick Adjust</th>
+                            <th class="py-3 px-6 font-medium text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-50" id="stock-tbody">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-6">
+                                <p class="font-semibold text-slate-800">Pran Mango Juice 1L</p>
+                                <p class="text-xs text-slate-500">ID: PR-001 | Cat: Grocery</p>
+                            </td>
+                            <td class="py-4 px-6 font-medium text-slate-600 font-bn">500 pcs</td>
+                            <td class="py-4 px-6 font-medium text-slate-600 font-bn">310 pcs</td>
+                            <td class="py-4 px-6 font-bold text-slate-800 font-bn">190 pcs</td>
+                            <td class="py-4 px-6 text-slate-600 font-bn">৳ 13,300</td>
+                            <td class="py-4 px-6">
+                                <span
+                                    class="bg-primary-50 text-primary-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase">FAST
+                                    ITEM</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button
+                                        class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center"
+                                        title="Reduce Stock"
+                                        onclick="UI.showToast('Stock reduced by 1', 'info')">-</button>
+                                    <button
+                                        class="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 flex items-center justify-center font-bold"
+                                        title="Add Stock"
+                                        onclick="UI.showToast('Stock added by 1', 'success')">+</button>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="UI.showToast('View detailed stock history...', 'info')"
+                                    class="text-primary-600 hover:text-primary-700 font-semibold text-xs border border-primary-100 px-3 py-1.5 rounded-lg bg-primary-50/30">View
+                                    Stock</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors border-l-4 border-alert">
+                            <td class="py-4 px-6">
+                                <p class="font-semibold text-slate-800">Ruchi BBQ Chanachur</p>
+                                <p class="text-xs text-slate-500">ID: RU-042 | Cat: Grocery</p>
+                            </td>
+                            <td class="py-4 px-6 font-medium text-slate-600 font-bn">100 pcs</td>
+                            <td class="py-4 px-6 font-medium text-slate-600 font-bn">72 pcs</td>
+                            <td class="py-4 px-6 font-bold text-alert font-bn">28 pcs</td>
+                            <td class="py-4 px-6 text-slate-600 font-bn">৳ 840</td>
+                            <td class="py-4 px-6">
+                                <span
+                                    class="bg-orange-50 text-orange-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase">SLOW
+                                    MOVING</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button
+                                        class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center"
+                                        title="Reduce Stock">-</button>
+                                    <button
+                                        class="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 flex items-center justify-center font-bold"
+                                        title="Add Stock">+</button>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button
+                                    class="text-primary-600 hover:text-primary-700 font-semibold text-xs border border-primary-100 px-3 py-1.5 rounded-lg bg-primary-50/30">View
+                                    Stock</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Stock Transfer Modal -->
+        <div id="transfer-modal"
+            class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-auto hidden">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+                onclick="this.parentElement.classList.add('hidden')"></div>
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative z-10">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">Stock Transfer</h3>
+                    <button onclick="document.getElementById('transfer-modal').classList.add('hidden')"
+                        class="text-slate-400 hover:text-slate-600" title="Close">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <label for="from-branch" class="block text-xs font-medium text-slate-500 mb-1">From
+                                Branch</label>
+                            <select id="from-branch" title="Select source branch"
+                                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-primary-500 outline-none">
+                                <option>Main Branch</option>
+                                <option>Branch 2</option>
+                            </select>
+                        </div>
+                        <div class="pt-5 text-slate-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <label for="to-branch" class="block text-xs font-medium text-slate-500 mb-1">To
+                                Branch</label>
+                            <select id="to-branch" title="Select destination branch"
+                                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-primary-500 outline-none">
+                                <option>Branch 2</option>
+                                <option>Main Branch</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="transfer-item" class="block text-sm font-medium text-slate-700 mb-1">Select
+                            Item</label>
+                        <select id="transfer-item" title="Select item to transfer"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                            <option>Ruchi BBQ Chanachur (Available: 20 in Branch 2)</option>
+                            <option>Pran Mango Juice 1L (Available: 145 in Main)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="transfer-qty" class="block text-sm font-medium text-slate-700 mb-1">Quantity to
+                            Transfer</label>
+                        <input type="number" id="transfer-qty"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm" placeholder="e.g. 10">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 mt-6">
+                    <button
+                        class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors font-bn"
+                        onclick="document.getElementById('transfer-modal').classList.add('hidden')">বাতিল করুন</button>
+                    <button
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 custom-shadow rounded-xl transition-colors"
+                        onclick="UI.showToast('Transfer initiated successfully!', 'success'); document.getElementById('transfer-modal').classList.add('hidden')">Transfer
+                        Stock</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/state.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.appState.requireAuth();
+        });
+    </script>
+</body>
+
+</html>
